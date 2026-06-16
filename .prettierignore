@@ -1,0 +1,7 @@
+# Build output (node_modules is ignored by default)
+.vite
+out
+dist
+
+# Lockfile — let npm own its formatting
+package-lock.json

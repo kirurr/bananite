@@ -17,65 +17,28 @@ async function submit() {
   <main>
     <h1>Minecraft Mods Manager</h1>
 
-    <p
-      v-if="!isElectron"
-      class="warn"
-    >
+    <p v-if="!isElectron" class="warn">
       Not running in Electron — the database API is unavailable.
     </p>
 
-    <form
-      class="add"
-      @submit.prevent="submit"
-    >
-      <input
-        v-model="name"
-        placeholder="Mod name"
-      >
-      <button
-        type="submit"
-        :disabled="loading"
-      >
-        Add
-      </button>
+    <form class="add" @submit.prevent="submit">
+      <input v-model="name" placeholder="Mod name" />
+      <button type="submit" :disabled="loading">Add</button>
     </form>
 
-    <p
-      v-if="error"
-      class="error"
-    >
+    <p v-if="error" class="error">
       {{ error }}
     </p>
 
-    <p
-      v-else-if="mods.length === 0"
-      class="empty"
-    >
-      No mods yet — add one above.
-    </p>
+    <p v-else-if="mods.length === 0" class="empty">No mods yet — add one above.</p>
 
-    <ul
-      v-else
-      class="mods"
-    >
-      <li
-        v-for="mod in mods"
-        :key="mod.id"
-      >
+    <ul v-else class="mods">
+      <li v-for="mod in mods" :key="mod.id">
         <label>
-          <input
-            type="checkbox"
-            :checked="mod.enabled"
-            @change="toggle(mod)"
-          >
+          <input type="checkbox" :checked="mod.enabled" @change="toggle(mod)" />
           <span :class="{ disabled: !mod.enabled }">{{ mod.name }}</span>
         </label>
-        <button
-          class="remove"
-          @click="remove(mod)"
-        >
-          ✕
-        </button>
+        <button class="remove" @click="remove(mod)">✕</button>
       </li>
     </ul>
   </main>

@@ -3,6 +3,7 @@ import tseslint from 'typescript-eslint';
 import pluginVue from 'eslint-plugin-vue';
 import importPlugin from 'eslint-plugin-import';
 import globals from 'globals';
+import eslintConfigPrettier from 'eslint-config-prettier';
 
 export default tseslint.config(
   // Build output / vendored dirs are never linted.
@@ -49,4 +50,9 @@ export default tseslint.config(
     files: ['eslint.config.mjs'],
     rules: { 'import/no-named-as-default-member': 'off' },
   },
+
+  // MUST stay last: turns off every ESLint rule that conflicts with Prettier
+  // (the stylistic rules pulled in by the js/ts/vue/import presets above).
+  // Prettier owns formatting; ESLint is left to check code quality only.
+  eslintConfigPrettier,
 );

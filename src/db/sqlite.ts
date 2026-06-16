@@ -1,6 +1,6 @@
-import Database from "better-sqlite3";
+import Database from 'better-sqlite3';
 
-const db = new Database("./db.sqlite");
+const db = new Database('./db.sqlite');
 
 db.exec(`
 	CREATE TABLE IF NOT EXISTS mods (
