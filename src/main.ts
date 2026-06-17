@@ -1,8 +1,8 @@
 import { app, BrowserWindow } from 'electron';
 import path from 'node:path';
 import started from 'electron-squirrel-startup';
-import { initDatabase } from './main/db';
 import { registerIpcHandlers } from './main/ipc';
+import { initDatabase } from './drizzle/client';
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (started) {

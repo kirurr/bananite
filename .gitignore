@@ -91,4 +91,9 @@ typings/
 # Electron-Forge
 out/
 
+# Local development SQLite database (the schema lives in drizzle/ migrations)
+mods.db
+mods.db-shm
+mods.db-wal
+
 .editorconfig

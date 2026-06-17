@@ -1,16 +1,12 @@
-import { ipcMain } from 'electron';
-import { IpcChannel, type NewMod } from '../shared/ipc';
-import * as db from './db';
+import { registerModsIpcHandlers } from '../mod/handlers';
 
 /**
- * Wire every IPC channel to its database handler.
- * Call once, after the database has been initialised.
+ * Register every feature's IPC handlers. Main-process only — this is where the
+ * DB-backed handler code is pulled in, kept separate from the renderer-safe
+ * contract in `../shared/ipc`.
+ *
+ * Call once, after `initDatabase()`.
  */
 export function registerIpcHandlers(): void {
-  ipcMain.handle(IpcChannel.ModsList, () => db.listMods());
-  ipcMain.handle(IpcChannel.ModsAdd, (_event, mod: NewMod) => db.addMod(mod));
-  ipcMain.handle(IpcChannel.ModsSetEnabled, (_event, id: number, enabled: boolean) =>
-    db.setModEnabled(id, enabled),
-  );
-  ipcMain.handle(IpcChannel.ModsDelete, (_event, id: number) => db.deleteMod(id));
+  registerModsIpcHandlers();
 }
