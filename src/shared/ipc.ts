@@ -1,4 +1,5 @@
 import { type Api as ModsApi, channel as ModsChannel } from '../mod/ipc';
+import { type Api as GameApi, channel as GameChannel } from '../game/ipc';
 
 /**
  * Shared IPC contract between the main and renderer processes.
@@ -11,6 +12,7 @@ import { type Api as ModsApi, channel as ModsChannel } from '../mod/ipc';
 
 export const IpcChannel = {
   ...ModsChannel,
+	...GameChannel,
 };
 
 /**
@@ -19,4 +21,5 @@ export const IpcChannel = {
  */
 export interface Api {
   mods: ModsApi;
+	game: GameApi;
 }

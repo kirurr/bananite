@@ -1,41 +1,49 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "8528795d-dc91-43cf-a5b0-9b003d4a0044",
+  "id": "384f6742-b047-4194-bf6f-c31321d54b10",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
-    "mods": {
-      "name": "mods",
+    "game_versions": {
+      "name": "game_versions",
       "columns": {
-        "id": {
-          "name": "id",
-          "type": "integer",
+        "version": {
+          "name": "version",
+          "type": "text",
           "primaryKey": true,
           "notNull": true,
-          "autoincrement": true
+          "autoincrement": false
         },
-        "name": {
-          "name": "name",
+        "type": {
+          "name": "type",
           "type": "text",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
-        },
-        "enabled": {
-          "name": "enabled",
-          "type": "integer",
-          "primaryKey": false,
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
+    "loaders": {
+      "name": "loaders",
+      "columns": {
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": true,
           "notNull": true,
-          "autoincrement": false,
-          "default": true
+          "autoincrement": false
         },
-        "created_at": {
-          "name": "created_at",
+        "icon": {
+          "name": "icon",
           "type": "text",
           "primaryKey": false,
           "notNull": true,
-          "autoincrement": false,
-          "default": "(datetime('now'))"
+          "autoincrement": false
         }
       },
       "indexes": {},

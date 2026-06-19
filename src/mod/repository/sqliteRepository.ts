@@ -1,28 +1,94 @@
 import { eq } from 'drizzle-orm';
-import { DB, getDb } from '../../drizzle/client';
-import { Mod, mods, NewMod } from '../schema';
-import { ModRepository } from './interface';
+import { injectable } from 'inversify';
+import { type DB, getDb } from '../../drizzle/client';
+import {
+  type Mod,
+  type ModInfo,
+  type ModVersion,
+  mods,
+  modInfos,
+  modVersions,
+  type NewMod,
+  type NewModInfo,
+  type NewModVersion,
+  type FilledMod,
+} from '../schema';
+import type { IModInfoRepository, IModRepository, IModVersionRepository } from './interface';
 
-export class SQLiteModsRepository implements ModRepository {
-  constructor(private readonly db: DB = getDb()) {}
-  async list(): Promise<Mod[]> {
-    const data = await this.db.select().from(mods).orderBy(mods.id);
-    return data;
-  }
+@injectable()
+export class SQLiteModRepository implements IModRepository {
+  private readonly db: DB = getDb();
 
-  async add(mod: NewMod): Promise<Mod> {
-    const data = await this.db
-      .insert(mods)
-      .values({ name: mod.name, enabled: mod.enabled })
-      .returning();
+  async getById(id: string): Promise<Mod | undefined> {
+    const data = await this.db.select().from(mods).where(eq(mods.id, id)).limit(1);
     return data[0];
   }
 
-  async setEnabled(id: number, enabled: boolean): Promise<void> {
-    await this.db.update(mods).set({ enabled }).where(eq(mods.id, id));
+  async list(): Promise<FilledMod[]> {
+    const rows = await this.db
+      .select()
+      .from(mods)
+      .leftJoin(modInfos, eq(mods.id, modInfos.modId))
+      .leftJoin(modVersions, eq(mods.id, modVersions.modId))
+      .orderBy(mods.id);
+
+    const byId = new Map<string, FilledMod>();
+    for (const row of rows) {
+      let filled = byId.get(row.mods.id);
+      if (!filled) {
+        filled = { ...row.mods, info: row.mod_infos, versions: [] };
+        byId.set(row.mods.id, filled);
+      }
+      if (row.mod_versions) filled.versions.push(row.mod_versions);
+    }
+
+    return [...byId.values()];
   }
 
-  async delete(id: number): Promise<void> {
+  async add(mod: NewMod): Promise<Mod> {
+    const data = await this.db.insert(mods).values(mod).returning();
+    return data[0];
+  }
+
+  async delete(id: string): Promise<void> {
     await this.db.delete(mods).where(eq(mods.id, id));
+  }
+}
+
+@injectable()
+export class SQLiteModInfoRepository implements IModInfoRepository {
+  private readonly db: DB = getDb();
+
+  async get(id: number): Promise<ModInfo | undefined> {
+    const data = await this.db.select().from(modInfos).where(eq(modInfos.id, id)).limit(1);
+    return data[0];
+  }
+
+  async list(): Promise<ModInfo[]> {
+    return this.db.select().from(modInfos).orderBy(modInfos.id);
+  }
+
+  async add(modInfo: NewModInfo): Promise<ModInfo> {
+    const data = await this.db.insert(modInfos).values(modInfo).returning();
+    return data[0];
+  }
+}
+
+@injectable()
+export class SQLiteModVersionRepository implements IModVersionRepository {
+  private readonly db: DB = getDb();
+
+  async get(id: string): Promise<ModVersion | undefined> {
+    const data = await this.db.select().from(modVersions).where(eq(modVersions.id, id)).limit(1);
+    return data[0];
+  }
+
+  async list(): Promise<ModVersion[]> {
+    return this.db.select().from(modVersions).orderBy(modVersions.id);
+  }
+
+  async add(modVersion: NewModVersion): Promise<ModVersion> {
+    const data = await this.db.insert(modVersions).values(modVersion).returning();
+    return data[0];
   }
 }

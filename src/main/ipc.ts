@@ -1,3 +1,4 @@
+import { registerGameIpcHandlers } from '../game/handlers';
 import { registerModsIpcHandlers } from '../mod/handlers';
 
 /**
@@ -9,4 +10,5 @@ import { registerModsIpcHandlers } from '../mod/handlers';
  */
 export function registerIpcHandlers(): void {
   registerModsIpcHandlers();
+	registerGameIpcHandlers();
 }
