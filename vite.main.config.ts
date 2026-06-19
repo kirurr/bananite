@@ -1,7 +1,9 @@
 import { defineConfig } from 'vite';
+import { hotRestart } from './vite.hot-restart';
 
 // https://vitejs.dev/config
 export default defineConfig({
+  plugins: [hotRestart()],
   build: {
     rollupOptions: {
       // Native module: must stay external so Vite doesn't try to bundle the

@@ -14,7 +14,7 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "db:generate": "drizzle-kit generate",
-    "db:migrate": "drizzle-kit migrate",
+		"db:migrate": "npm rebuild better-sqlite3 && drizzle-kit migrate && npx electron-rebuild -f -w better-sqlite3",
     "db:push": "drizzle-kit push",
     "db:studio": "drizzle-kit studio"
   },

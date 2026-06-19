@@ -1,10 +1,7 @@
-import { inject, injectable } from 'inversify';
+import { inject, injectable, named } from 'inversify';
 import { TYPES } from '../types';
 import type { IGameRepository } from './repository/interface';
-import {
-  type GameVersion,
-  type Loader,
-} from './schema';
+import { type GameVersion, type Loader } from './schema';
 import type { IGameAPI } from '../providers/api/interface';
 
 export interface IGameService {
@@ -17,11 +14,14 @@ export interface IGameService {
 export class GameService implements IGameService {
   constructor(
     @inject(TYPES.GameRepository) private readonly repo: IGameRepository,
-    @inject(TYPES.GameAPI) private readonly api: IGameAPI,
+    @inject(TYPES.GameAPI) @named('modrinth') private readonly api: IGameAPI,
   ) {}
 
   async syncData() {
-    const [versions, loaders] = await Promise.all([this.api.getVersions(), this.api.getLoaders()]);
+    const [versions, loaders] = await Promise.all([
+      this.api.getGameVersions(),
+      this.api.getGameLoaders(),
+    ]);
 
     const result = await Promise.allSettled([
       ...versions.map((version) => this.repo.createVersion(version)),

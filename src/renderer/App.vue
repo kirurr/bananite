@@ -6,7 +6,7 @@ import { useMods } from './composables/mod';
 const { versions, loaders, syncData } = useGame();
 const { mods, addModByLink } = useMods();
 
-const tab = ref<'data' | 'mods'>('data');
+const tab = ref<'data' | 'mods'>('mods');
 const input = ref('');
 </script>
 
@@ -24,8 +24,15 @@ const input = ref('');
     </div>
     <div>
       <ul class="max-h-75 w-full overflow-y-auto">
-        <li v-for="mod in mods" :key="mod.id">
-          {{ mod.rawName }}
+        <li v-for="mod in mods" :key="mod.id" class="flex flex-col gap-2">
+          <div>
+            {{ mod.rawName }}
+          </div>
+          <div class="flex flex-row overflow-x-auto">
+            <span v-for="version in mod.versions" :key="version.id" class="mx-2 block text-nowrap">
+              {{ version.name }}
+            </span>
+          </div>
         </li>
       </ul>
     </div>

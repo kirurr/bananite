@@ -1,4 +1,4 @@
-import { integer, sqliteTable, text } from 'drizzle-orm/sqlite-core';
+import { sqliteTable, text } from 'drizzle-orm/sqlite-core';
 import { providers } from '../providers/providers';
 
 export const mods = sqliteTable('mods', {
@@ -29,7 +29,7 @@ export type ModVersion = typeof modVersions.$inferSelect;
 export type NewModVersion = typeof modVersions.$inferInsert;
 
 export const modInfos = sqliteTable('mod_infos', {
-  id: integer('id').primaryKey({ autoIncrement: true }),
+  id: text('id').primaryKey().notNull(),
   modId: text('mod_id')
     .notNull()
     .references(() => mods.id)

@@ -8,7 +8,7 @@ export interface IModRepository {
 }
 
 export interface IModInfoRepository {
-  get(id: number): Promise<ModInfo | undefined>;
+  get(id: string): Promise<ModInfo | undefined>;
   list(): Promise<ModInfo[]>;
   add(modInfo: NewModInfo): Promise<ModInfo>;
 }

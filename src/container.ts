@@ -18,12 +18,15 @@ import type { IModProvider } from './providers/interface';
 import { ModrinthProvider } from './providers/modrinth/provider';
 import type { ProviderTypes } from './providers/providers';
 import type { IGameAPI } from './providers/api/interface';
-import { ModrinthAPI } from './providers/api/modrinthApi';
+import { ModrinthAPIv270 } from './providers/api/modrinthApiv270';
 
 const container = new Container();
 
-// --- Game (fully wired) ---
-container.bind<IGameAPI>(TYPES.GameAPI).to(ModrinthAPI).inSingletonScope();
+container
+  .bind<IGameAPI>(TYPES.GameAPI)
+  .to(ModrinthAPIv270)
+  .inSingletonScope()
+  .whenNamed('modrinth');
 container.bind<IGameRepository>(TYPES.GameRepository).to(SQLiteGameRepository).inSingletonScope();
 container.bind<IGameService>(TYPES.GameService).to(GameService).inSingletonScope();
 
@@ -54,6 +57,11 @@ container
 /** Resolve a provider implementation by its name (the @named tag). */
 export function getModProvider(provider: ProviderTypes): IModProvider {
   return container.get<IModProvider>(TYPES.ModProvider, { name: provider });
+}
+
+/** Resolve a game-API implementation by its name (the @named tag). */
+export function getGameAPI(provider: ProviderTypes): IGameAPI {
+  return container.get<IGameAPI>(TYPES.GameAPI, { name: provider });
 }
 
 export { container };

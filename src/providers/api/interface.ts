@@ -1,6 +1,8 @@
 import type { NewGameVersion, NewLoader } from "../../game/schema";
+import type { FilledMod } from "../../mod/schema";
 
 export interface IGameAPI {
-	getVersions(): Promise<NewGameVersion[]>;
-	getLoaders(): Promise<NewLoader[]>;
+	getGameVersions(): Promise<NewGameVersion[]>;
+	getGameLoaders(): Promise<NewLoader[]>;
+	getFilledModFromSlug(slug: string): Promise<FilledMod>;
 }

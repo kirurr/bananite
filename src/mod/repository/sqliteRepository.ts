@@ -1,4 +1,4 @@
-import { eq } from 'drizzle-orm';
+import { asc, desc, eq } from 'drizzle-orm';
 import { injectable } from 'inversify';
 import { type DB, getDb } from '../../drizzle/client';
 import {
@@ -30,7 +30,7 @@ export class SQLiteModRepository implements IModRepository {
       .from(mods)
       .leftJoin(modInfos, eq(mods.id, modInfos.modId))
       .leftJoin(modVersions, eq(mods.id, modVersions.modId))
-      .orderBy(mods.id);
+			.orderBy(mods.id, desc(modVersions.date));
 
     const byId = new Map<string, FilledMod>();
     for (const row of rows) {
@@ -59,7 +59,7 @@ export class SQLiteModRepository implements IModRepository {
 export class SQLiteModInfoRepository implements IModInfoRepository {
   private readonly db: DB = getDb();
 
-  async get(id: number): Promise<ModInfo | undefined> {
+  async get(id: string): Promise<ModInfo | undefined> {
     const data = await this.db.select().from(modInfos).where(eq(modInfos.id, id)).limit(1);
     return data[0];
   }
@@ -84,7 +84,7 @@ export class SQLiteModVersionRepository implements IModVersionRepository {
   }
 
   async list(): Promise<ModVersion[]> {
-    return this.db.select().from(modVersions).orderBy(modVersions.id);
+    return this.db.select().from(modVersions).orderBy(desc( modVersions.date ));
   }
 
   async add(modVersion: NewModVersion): Promise<ModVersion> {
