@@ -1,6 +1,10 @@
 import { inject, injectable } from 'inversify';
 import { TYPES } from '../types';
-import type { IModRepository, IModInfoRepository, IModVersionRepository } from './repository/interface';
+import type {
+  IModRepository,
+  IModInfoRepository,
+  IModVersionRepository,
+} from './repository/interface';
 import type { NewMod, NewModInfo, NewModVersion, Mod } from './schema';
 
 export interface IModService {

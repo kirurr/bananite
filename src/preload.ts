@@ -6,6 +6,8 @@ const api: Api = {
     listVersions: () => ipcRenderer.invoke(IpcChannel.VersionList),
     listLoaders: () => ipcRenderer.invoke(IpcChannel.LoaderList),
     syncData: () => ipcRenderer.invoke(IpcChannel.SyncData),
+    getSettings: () => ipcRenderer.invoke(IpcChannel.GameSettings),
+    setSettings: (data) => ipcRenderer.invoke(IpcChannel.SetGameSettings, data),
   },
   mods: {
     addByLink: (link) => ipcRenderer.invoke(IpcChannel.ModsAddByLink, link),

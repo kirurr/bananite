@@ -16,23 +16,23 @@ export function useElectron() {
 
 /** Reactive view of the mods stored in the main-process database. */
 export function useMods() {
-	const mods = ref<FilledMod[]>([]);
+  const mods = ref<FilledMod[]>([]);
 
-	async function getMods() {
-		const result = await window.api.mods.list();
-		mods.value = result;
-	}
+  async function getMods() {
+    const result = await window.api.mods.list();
+    mods.value = result;
+  }
 
-	async function addModByLink(link: string) {
-		await window.api.mods.addByLink(link);
-		getMods();
-	}
+  async function addModByLink(link: string) {
+    await window.api.mods.addByLink(link);
+    getMods();
+  }
 
-	getMods();
+  getMods();
 
-	return {
-		mods,
-		getMods,
-		addModByLink,
-	};
+  return {
+    mods,
+    getMods,
+    addModByLink,
+  };
 }

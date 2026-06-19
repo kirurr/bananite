@@ -10,5 +10,5 @@ import { registerModsIpcHandlers } from '../mod/handlers';
  */
 export function registerIpcHandlers(): void {
   registerModsIpcHandlers();
-	registerGameIpcHandlers();
+  registerGameIpcHandlers();
 }

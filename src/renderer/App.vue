@@ -2,8 +2,9 @@
 import { ref } from 'vue';
 import { useGame } from './composables/game';
 import { useMods } from './composables/mod';
+import SettingsForm from './components/SettingsForm.vue';
 
-const { versions, loaders, syncData } = useGame();
+const { versions, loaders, syncData, settings, setSettings } = useGame();
 const { mods, addModByLink } = useMods();
 
 const tab = ref<'data' | 'mods'>('mods');
@@ -12,6 +13,7 @@ const input = ref('');
 
 <template>
   <div>
+    <SettingsForm :settings="settings" :set-settings="setSettings" />
     <div class="flex flex-row gap-4">
       <button @click="tab = 'mods'">Mods</button>
       <button @click="tab = 'data'">Data</button>

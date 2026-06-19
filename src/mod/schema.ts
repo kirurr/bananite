@@ -43,6 +43,6 @@ export type ModInfo = typeof modInfos.$inferSelect;
 export type NewModInfo = typeof modInfos.$inferInsert;
 
 export type FilledMod = Mod & {
-	info: ModInfo | null;
-	versions: ModVersion[];
-}
+  info: ModInfo | null;
+  versions: ModVersion[];
+};

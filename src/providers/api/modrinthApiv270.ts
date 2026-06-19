@@ -62,28 +62,36 @@ const ModrinthProjectSchema = z.object({
   title: z.string(),
   description: z.string(),
   categories: z.array(z.string()),
-  client_side: z.enum(["required", "optional", "unsupported", "unknown"]),
-  server_side: z.enum(["required", "optional", "unsupported", "unknown"]),
+  client_side: z.enum(['required', 'optional', 'unsupported', 'unknown']),
+  server_side: z.enum(['required', 'optional', 'unsupported', 'unknown']),
   body: z.string(),
   status: z.enum([
-    "approved", "archived", "rejected", "draft",
-    "unlisted", "processing", "withheld", "scheduled", "private", "unknown",
+    'approved',
+    'archived',
+    'rejected',
+    'draft',
+    'unlisted',
+    'processing',
+    'withheld',
+    'scheduled',
+    'private',
+    'unknown',
   ]),
-  requested_status: z.nullable(
-    z.enum(["approved", "archived", "unlisted", "private", "draft"])
-  ).optional(),
+  requested_status: z
+    .nullable(z.enum(['approved', 'archived', 'unlisted', 'private', 'draft']))
+    .optional(),
   additional_categories: z.array(z.string()).optional(),
   issues_url: z.nullable(z.string()).optional(),
   source_url: z.nullable(z.string()).optional(),
   wiki_url: z.nullable(z.string()).optional(),
   discord_url: z.nullable(z.string()).optional(),
   donation_urls: z.array(DonationUrlSchema).optional(),
-  project_type: z.enum(["mod", "modpack", "resourcepack", "shader"]),
+  project_type: z.enum(['mod', 'modpack', 'resourcepack', 'shader']),
   downloads: z.int().nonnegative(),
   icon_url: z.nullable(z.string()).optional(),
   color: z.nullable(z.int()).optional(),
   thread_id: z.string().optional(),
-  monetization_status: z.enum(["monetized", "demonetized", "force-demonetized"]).optional(),
+  monetization_status: z.enum(['monetized', 'demonetized', 'force-demonetized']).optional(),
   id: z.string(),
   team: z.string(),
   body_url: z.nullable(z.string()).optional(),
@@ -106,7 +114,7 @@ const DependencySchema = z.object({
   version_id: z.nullable(z.string()),
   project_id: z.nullable(z.string()),
   file_name: z.nullable(z.string()),
-  dependency_type: z.enum(["required", "optional", "incompatible", "embedded"]),
+  dependency_type: z.enum(['required', 'optional', 'incompatible', 'embedded']),
 });
 
 const FileHashesSchema = z.object({
@@ -120,12 +128,19 @@ const VersionFileSchema = z.object({
   filename: z.string(),
   primary: z.boolean(),
   size: z.int().nonnegative(),
-  file_type: z.nullable(
-    z.enum([
-      "required-resource-pack", "optional-resource-pack",
-      "sources-jar", "dev-jar", "javadoc-jar", "unknown", "signature",
-    ])
-  ).optional(),
+  file_type: z
+    .nullable(
+      z.enum([
+        'required-resource-pack',
+        'optional-resource-pack',
+        'sources-jar',
+        'dev-jar',
+        'javadoc-jar',
+        'unknown',
+        'signature',
+      ]),
+    )
+    .optional(),
 });
 
 const ModrinthVersionSchema = z.object({
@@ -134,13 +149,11 @@ const ModrinthVersionSchema = z.object({
   changelog: z.nullable(z.string()).optional(),
   dependencies: z.array(DependencySchema),
   game_versions: z.array(z.string()),
-  version_type: z.enum(["release", "beta", "alpha"]),
+  version_type: z.enum(['release', 'beta', 'alpha']),
   loaders: z.array(z.string()),
   featured: z.boolean(),
-  status: z.enum(["listed", "archived", "draft", "unlisted", "scheduled", "unknown"]),
-  requested_status: z.nullable(
-    z.enum(["listed", "archived", "draft", "unlisted"])
-  ).optional(),
+  status: z.enum(['listed', 'archived', 'draft', 'unlisted', 'scheduled', 'unknown']),
+  requested_status: z.nullable(z.enum(['listed', 'archived', 'draft', 'unlisted'])).optional(),
   id: z.string(),
   project_id: z.string(),
   author_id: z.string(),

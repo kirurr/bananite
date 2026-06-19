@@ -1,4 +1,4 @@
-import { sqliteTable, text } from 'drizzle-orm/sqlite-core';
+import { integer, sqliteTable, text } from 'drizzle-orm/sqlite-core';
 import { createInsertSchema } from 'drizzle-zod';
 import { z } from 'zod';
 
@@ -24,3 +24,12 @@ export type Loader = typeof loaders.$inferSelect;
 
 export const newLoaderSchema = createInsertSchema(loaders);
 export type NewLoader = z.infer<typeof newLoaderSchema>;
+
+export const gameSettings = sqliteTable('game_settings', {
+  id: integer('id').primaryKey({ autoIncrement: true }),
+  gamePath: text('game_path').notNull(),
+  downloadPath: text('download_path').notNull(),
+});
+
+export type GameSettings = typeof gameSettings.$inferSelect;
+export type NewGameSettings = typeof gameSettings.$inferInsert;

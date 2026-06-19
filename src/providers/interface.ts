@@ -1,3 +1,3 @@
 export interface IModProvider {
-	addModByLink(link: string): Promise<void>;
+  addModByLink(link: string): Promise<void>;
 }

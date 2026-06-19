@@ -12,7 +12,7 @@ import { type Api as GameApi, channel as GameChannel } from '../game/ipc';
 
 export const IpcChannel = {
   ...ModsChannel,
-	...GameChannel,
+  ...GameChannel,
 };
 
 /**
@@ -21,5 +21,5 @@ export const IpcChannel = {
  */
 export interface Api {
   mods: ModsApi;
-	game: GameApi;
+  game: GameApi;
 }

@@ -10,4 +10,6 @@ export function registerGameIpcHandlers(): void {
   ipcMain.handle(channel.VersionList, () => service.getVersions());
   ipcMain.handle(channel.LoaderList, () => service.getLoaders());
   ipcMain.handle(channel.SyncData, () => service.syncData());
+  ipcMain.handle(channel.GameSettings, () => service.getSettings());
+  ipcMain.handle(channel.SetGameSettings, (_, data) => service.setSettings(data));
 }

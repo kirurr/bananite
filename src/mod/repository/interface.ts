@@ -1,4 +1,12 @@
-import type { FilledMod, Mod, ModInfo, ModVersion, NewMod, NewModInfo, NewModVersion } from '../schema';
+import type {
+  FilledMod,
+  Mod,
+  ModInfo,
+  ModVersion,
+  NewMod,
+  NewModInfo,
+  NewModVersion,
+} from '../schema';
 
 export interface IModRepository {
   getById(id: string): Promise<Mod | undefined>;

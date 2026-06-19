@@ -30,7 +30,7 @@ export class SQLiteModRepository implements IModRepository {
       .from(mods)
       .leftJoin(modInfos, eq(mods.id, modInfos.modId))
       .leftJoin(modVersions, eq(mods.id, modVersions.modId))
-			.orderBy(mods.id, desc(modVersions.date));
+      .orderBy(mods.id, desc(modVersions.date));
 
     const byId = new Map<string, FilledMod>();
     for (const row of rows) {
@@ -84,7 +84,7 @@ export class SQLiteModVersionRepository implements IModVersionRepository {
   }
 
   async list(): Promise<ModVersion[]> {
-    return this.db.select().from(modVersions).orderBy(desc( modVersions.date ));
+    return this.db.select().from(modVersions).orderBy(desc(modVersions.date));
   }
 
   async add(modVersion: NewModVersion): Promise<ModVersion> {

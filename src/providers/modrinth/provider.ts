@@ -1,5 +1,5 @@
 import { inject, injectable, named } from 'inversify';
-import { TYPES } from '../../types';
+import { NAMED_CONSTANTS, TYPES } from '../../types';
 import type { IModProvider } from '../interface';
 import type { IModService } from '../../mod/service';
 import type { IGameAPI } from '../api/interface';
@@ -19,7 +19,9 @@ export class ModrinthProvider implements IModProvider {
 
   constructor(
     @inject(TYPES.ModService) service: IModService,
-    @inject(TYPES.GameAPI) @named('modrinth') private readonly api: IGameAPI,
+    @inject(TYPES.GameAPI)
+    @named(NAMED_CONSTANTS.providers.modrinth)
+    private readonly api: IGameAPI,
   ) {
     this.service = service;
   }

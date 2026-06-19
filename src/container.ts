@@ -1,5 +1,5 @@
 import { Container } from 'inversify';
-import { TYPES } from './types';
+import { NAMED_CONSTANTS, TYPES } from './types';
 import type { IGameRepository } from './game/repository/interface';
 import { SQLiteGameRepository } from './game/repository/sqliteRepository';
 import { GameService, type IGameService } from './game/service';
@@ -19,14 +19,29 @@ import { ModrinthProvider } from './providers/modrinth/provider';
 import type { ProviderTypes } from './providers/providers';
 import type { IGameAPI } from './providers/api/interface';
 import { ModrinthAPIv270 } from './providers/api/modrinthApiv270';
+import type { ILinker } from './linker/interface';
+import { WindowsLinker } from './linker/windows-linker';
+import type { IProfileRepository } from './profile/repository/interface';
+import { SQLiteProfileRepository } from './profile/repository/sqliteRepository';
 
 const container = new Container();
+
+container
+  .bind<IProfileRepository>(TYPES.ProfileRepository)
+  .to(SQLiteProfileRepository)
+  .inSingletonScope();
+
+container
+  .bind<ILinker>(TYPES.Linker)
+  .to(WindowsLinker)
+  .inSingletonScope()
+  .whenNamed(NAMED_CONSTANTS.system.windows);
 
 container
   .bind<IGameAPI>(TYPES.GameAPI)
   .to(ModrinthAPIv270)
   .inSingletonScope()
-  .whenNamed('modrinth');
+  .whenNamed(NAMED_CONSTANTS.providers.modrinth);
 container.bind<IGameRepository>(TYPES.GameRepository).to(SQLiteGameRepository).inSingletonScope();
 container.bind<IGameService>(TYPES.GameService).to(GameService).inSingletonScope();
 
@@ -50,7 +65,7 @@ container
   .bind<IModProvider>(TYPES.ModProvider)
   .to(ModrinthProvider)
   .inSingletonScope()
-  .whenNamed('modrinth');
+  .whenNamed(NAMED_CONSTANTS.providers.modrinth);
 // TODO: add CurseforgeProvider once implemented:
 // container.bind<IModProvider>(TYPES.ModProvider).to(CurseforgeProvider).inSingletonScope().whenNamed('curseforge');
 
