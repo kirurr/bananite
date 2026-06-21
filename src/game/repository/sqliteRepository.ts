@@ -24,8 +24,11 @@ export class SQLiteGameRepository implements IGameRepository {
     return res[0];
   }
 
-  async createGameSettings(data: NewGameSettings): Promise<void> {
-    await this.db.insert(gameSettings).values(data);
+  async setGameSettings(data: NewGameSettings): Promise<void> {
+    await this.db.insert(gameSettings).values(data).onConflictDoUpdate({
+      target: gameSettings.id,
+      set: data,
+    });
   }
 
   async createVersion(version: NewGameVersion): Promise<void> {

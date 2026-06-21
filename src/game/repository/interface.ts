@@ -13,5 +13,5 @@ export interface IGameRepository {
   getLoaders(): Promise<Loader[]>;
   createLoader(loader: NewLoader): Promise<void>;
   getGameSettings(): Promise<GameSettings | null>;
-  createGameSettings(data: NewGameSettings): Promise<void>;
+  setGameSettings(data: NewGameSettings): Promise<void>;
 }

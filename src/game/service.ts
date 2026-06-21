@@ -52,6 +52,6 @@ export class GameService implements IGameService {
   }
 
   async setSettings(data: NewGameSettings): Promise<void> {
-    return this.repo.createGameSettings(data);
+    return this.repo.setGameSettings(data);
   }
 }

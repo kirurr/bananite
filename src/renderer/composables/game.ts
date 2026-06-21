@@ -34,12 +34,6 @@ export function useGame() {
     return window.api.game.syncData();
   }
 
-	async function openDialog(): Promise<string | undefined> {
-		const string =  await window.api.openDialog({});
-		console.log(string);
-		return string;
-	}
-
   return {
     versions,
     getVersions,
@@ -49,6 +43,5 @@ export function useGame() {
     settings,
     getSettings,
     setSettings,
-		openDialog,
   };
 }

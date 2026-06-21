@@ -1,4 +1,4 @@
-import type { GameSettings, GameVersion, Loader, NewGameSettings, NewGameVersion } from './schema';
+import type { GameSettings, GameVersion, Loader, NewGameSettings } from './schema';
 
 export const channel = {
   VersionList: 'game:version-list',

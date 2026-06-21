@@ -97,3 +97,5 @@ mods.db-shm
 mods.db-wal
 
 .editorconfig
+
+todo.md

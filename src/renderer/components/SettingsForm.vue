@@ -1,40 +1,56 @@
 <script setup lang="ts">
+import { ref, type Ref } from 'vue';
 import type { GameSettings, NewGameSettings } from '../../game/schema';
+import { useDialog } from '../composables/useDialog';
+
+const { openDialog } = useDialog();
 
 const { settings, setSettings } = defineProps<{
-  settings: GameSettings | null;
+	settings: GameSettings | null;
   setSettings: (data: NewGameSettings) => Promise<void>;
 }>();
 
+const gamePath = ref(settings?.gamePath ?? '');
+const downloadPath = ref(settings?.downloadPath ?? '');
+
+async function handleChange(ref: Ref<string>) {
+  const string = await openDialog();
+  if (string) {
+    ref.value = string;
+  }
+}
+
+function handleChangeGamePath(e: Event) {
+  e.preventDefault();
+  handleChange(gamePath);
+}
+
+function handleChangeDownloadPath(e: Event) {
+  e.preventDefault();
+  handleChange(downloadPath);
+}
+
 function handleSubmit(e: Event) {
   e.preventDefault();
-  const form = e.target as HTMLFormElement;
 
-  const data = new FormData(form);
-
-  const settings: NewGameSettings = {
-    gamePath: data.get('gamePath') as string,
-    downloadPath: data.get('downloadPath') as string,
+  const newSettings: NewGameSettings = {
+    id: settings?.id,
+    gamePath: gamePath.value,
+    downloadPath: downloadPath.value,
   };
 
-  setSettings(settings);
+  setSettings(newSettings);
 }
 </script>
 
 <template>
   <form class="flex flex-row gap-4" @submit="handleSubmit">
-    <input
-			type="text"
-			name="gamePath"
-			placeholder="Game path"
-			:value="settings?.gamePath"
-		/>
-    <input
-      type="text"
-      name="downloadPath"
-      placeholder="Download path"
-      :value="settings?.downloadPath"
-    />
+    <div @click="handleChangeGamePath">
+      {{ gamePath }}
+    </div>
+    <div @click="handleChangeDownloadPath">
+      {{ downloadPath }}
+    </div>
     <button type="submit">Save</button>
   </form>
 </template>
