@@ -29,6 +29,20 @@
       "when": 1781901254094,
       "tag": "0003_hot_luckman",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "6",
+      "when": 1782043561939,
+      "tag": "0004_mighty_misty_knight",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "6",
+      "when": 1782043628557,
+      "tag": "0005_yummy_lightspeed",
+      "breakpoints": true
     }
   ]
 }

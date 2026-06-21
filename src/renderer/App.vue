@@ -3,9 +3,10 @@ import { ref } from 'vue';
 import { useGame } from './composables/game';
 import { useMods } from './composables/mod';
 import SettingsForm from './components/SettingsForm.vue';
+import DownloadMod from './components/DownloadMod.vue';
 
 const { versions, loaders, syncData, settings, setSettings } = useGame();
-const { mods, addModByLink } = useMods();
+const { mods, addModByLink, downloadMod } = useMods();
 
 const tab = ref<'data' | 'mods'>('mods');
 const input = ref('');
@@ -13,18 +14,18 @@ const input = ref('');
 
 <template>
   <div>
-    <SettingsForm
-      v-if="settings"
-      :key="settings.id || 0"
-			:settings="settings"
-      :set-settings="setSettings"
-    />
     <div class="flex flex-row gap-4">
       <button @click="tab = 'mods'">Mods</button>
       <button @click="tab = 'data'">Data</button>
     </div>
   </div>
   <template v-if="tab === 'mods'">
+    <DownloadMod
+      :handle-download="downloadMod"
+      :mods="mods"
+      :versions="versions"
+      :loaders="loaders"
+    />
     <div class="flex flex-col gap-2">
       <input v-model="input" type="text" placeholder="https://modrinth.com/mod/mod-name" />
       <button @click="addModByLink(input)">Add by link</button>
@@ -45,6 +46,10 @@ const input = ref('');
     </div>
   </template>
   <template v-if="tab === 'data'">
+    <SettingsForm
+      :settings="settings"
+      :set-settings="setSettings"
+    />
     <div>
       <div class="flex flex-row gap-4">
         <button @click="syncData">Sync Data</button>

@@ -1,3 +1,4 @@
 export interface ILinker {
-  createLink(from_path: string, to_path: string): Promise<void>;
+  createLink(file: string): Promise<void>;
+	deleteLink(file: string): Promise<void>;
 }

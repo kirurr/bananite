@@ -2,7 +2,7 @@ import { inject, injectable, named } from 'inversify';
 import { NAMED_CONSTANTS, TYPES } from '../types';
 import type { IGameRepository } from './repository/interface';
 import { type GameSettings, type GameVersion, type Loader, type NewGameSettings } from './schema';
-import type { IGameAPI } from '../providers/api/interface';
+import type { IProviderAPI } from '../providers/api/interface';
 
 export interface IGameService {
   syncData(): Promise<void>;
@@ -16,9 +16,9 @@ export interface IGameService {
 export class GameService implements IGameService {
   constructor(
     @inject(TYPES.GameRepository) private readonly repo: IGameRepository,
-    @inject(TYPES.GameAPI)
+    @inject(TYPES.ProviderAPI)
     @named(NAMED_CONSTANTS.providers.modrinth)
-    private readonly api: IGameAPI,
+    private readonly api: IProviderAPI,
   ) {}
 
   async syncData() {

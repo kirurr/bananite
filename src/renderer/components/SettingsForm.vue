@@ -10,10 +10,10 @@ const { settings, setSettings } = defineProps<{
   setSettings: (data: NewGameSettings) => Promise<void>;
 }>();
 
-const gamePath = ref(settings?.gamePath ?? '');
-const downloadPath = ref(settings?.downloadPath ?? '');
+const gamePath = ref(settings?.gamePath);
+const downloadPath = ref(settings?.downloadPath);
 
-async function handleChange(ref: Ref<string>) {
+async function handleChange(ref: Ref<string | undefined>) {
   const string = await openDialog();
   if (string) {
     ref.value = string;
@@ -33,6 +33,8 @@ function handleChangeDownloadPath(e: Event) {
 function handleSubmit(e: Event) {
   e.preventDefault();
 
+	if (!gamePath.value || !downloadPath.value) return console.error('Paths not set');
+
   const newSettings: NewGameSettings = {
     id: settings?.id,
     gamePath: gamePath.value,
@@ -47,9 +49,11 @@ function handleSubmit(e: Event) {
   <form class="flex flex-row gap-4" @submit="handleSubmit">
     <div @click="handleChangeGamePath">
       {{ gamePath }}
+			<span v-if="!gamePath">game path is not set</span>
     </div>
     <div @click="handleChangeDownloadPath">
       {{ downloadPath }}
+			<span v-if="!downloadPath">download path is not set</span>
     </div>
     <button type="submit">Save</button>
   </form>

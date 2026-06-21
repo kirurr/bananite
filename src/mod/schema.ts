@@ -1,4 +1,4 @@
-import { sqliteTable, text } from 'drizzle-orm/sqlite-core';
+import { integer, sqliteTable, text } from 'drizzle-orm/sqlite-core';
 import { providers } from '../providers/providers';
 
 export const mods = sqliteTable('mods', {
@@ -23,6 +23,9 @@ export const modVersions = sqliteTable('mod_versions', {
   date: text('date').notNull(),
   gameVersion: text('game_version').notNull(),
   loader: text('loader').notNull(),
+	downloadUrl: text('download_url').notNull(),
+	fileName: text('file_name').notNull(),
+	fileSize: integer('file_size').notNull(),
 });
 
 export type ModVersion = typeof modVersions.$inferSelect;

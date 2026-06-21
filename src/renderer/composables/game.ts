@@ -30,8 +30,10 @@ export function useGame() {
     loaders.value = result;
   }
 
-  function syncData() {
-    return window.api.game.syncData();
+  async function syncData() {
+    await window.api.game.syncData();
+		getVersions();
+		getLoaders();
   }
 
   return {

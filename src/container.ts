@@ -17,7 +17,7 @@ import {
 import type { IModProvider } from './providers/interface';
 import { ModrinthProvider } from './providers/modrinth/provider';
 import type { ProviderTypes } from './providers/providers';
-import type { IGameAPI } from './providers/api/interface';
+import type { IProviderAPI } from './providers/api/interface';
 import { ModrinthAPIv270 } from './providers/api/modrinthApiv270';
 import type { ILinker } from './linker/interface';
 import { WindowsLinker } from './linker/windows-linker';
@@ -38,7 +38,7 @@ container
   .whenNamed(NAMED_CONSTANTS.system.windows);
 
 container
-  .bind<IGameAPI>(TYPES.GameAPI)
+  .bind<IProviderAPI>(TYPES.ProviderAPI)
   .to(ModrinthAPIv270)
   .inSingletonScope()
   .whenNamed(NAMED_CONSTANTS.providers.modrinth);
@@ -75,8 +75,14 @@ export function getModProvider(provider: ProviderTypes): IModProvider {
 }
 
 /** Resolve a game-API implementation by its name (the @named tag). */
-export function getGameAPI(provider: ProviderTypes): IGameAPI {
-  return container.get<IGameAPI>(TYPES.GameAPI, { name: provider });
+export function getGameAPI(provider: ProviderTypes): IProviderAPI {
+  return container.get<IProviderAPI>(TYPES.ProviderAPI, { name: provider });
+}
+
+/** Resolve the linker implementation for the current platform. */
+export function getLinker(): ILinker {
+  // TODO: pick linux/mac linker once implemented; only windows for now.
+  return container.get<ILinker>(TYPES.Linker, { name: NAMED_CONSTANTS.system.windows });
 }
 
 export { container };

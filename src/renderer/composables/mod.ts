@@ -1,5 +1,6 @@
 import { ref } from 'vue';
 import type { FilledMod } from '../../mod/schema';
+import type { GameVersion, Loader } from '../../game/schema';
 
 /**
  * Whether the preload bridge is present.
@@ -30,9 +31,14 @@ export function useMods() {
 
   getMods();
 
+	async function downloadMod(mod: FilledMod, gameVersion: GameVersion, loader: Loader) {
+		await window.api.mods.downloadMod(mod, gameVersion, loader);
+	}
+
   return {
     mods,
     getMods,
     addModByLink,
+		downloadMod,
   };
 }
