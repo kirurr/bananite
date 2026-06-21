@@ -1,5 +1,6 @@
 import { type Api as ModsApi, channel as ModsChannel } from '../mod/ipc';
 import { type Api as GameApi, channel as GameChannel } from '../game/ipc';
+import type { OpenDialogOptions } from 'electron';
 
 /**
  * Shared IPC contract between the main and renderer processes.
@@ -13,6 +14,7 @@ import { type Api as GameApi, channel as GameChannel } from '../game/ipc';
 export const IpcChannel = {
   ...ModsChannel,
   ...GameChannel,
+	OpenDialog: 'shared:open-dialog',
 };
 
 /**
@@ -22,4 +24,5 @@ export const IpcChannel = {
 export interface Api {
   mods: ModsApi;
   game: GameApi;
+	openDialog: (options: OpenDialogOptions) => Promise<string | undefined>;
 }

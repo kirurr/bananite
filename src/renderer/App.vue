@@ -4,7 +4,13 @@ import { useGame } from './composables/game';
 import { useMods } from './composables/mod';
 import SettingsForm from './components/SettingsForm.vue';
 
-const { versions, loaders, syncData, settings, setSettings } = useGame();
+const {
+	versions,
+	loaders,
+	syncData,
+	settings,
+	setSettings,
+} = useGame();
 const { mods, addModByLink } = useMods();
 
 const tab = ref<'data' | 'mods'>('mods');

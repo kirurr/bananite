@@ -1,5 +1,6 @@
 import { contextBridge, ipcRenderer } from 'electron';
 import { IpcChannel, type Api } from './shared/ipc';
+import { sharedHandler } from './shared/handler';
 
 const api: Api = {
   game: {
@@ -13,6 +14,7 @@ const api: Api = {
     addByLink: (link) => ipcRenderer.invoke(IpcChannel.ModsAddByLink, link),
     list: () => ipcRenderer.invoke(IpcChannel.ModsList),
   },
+	...sharedHandler,
 };
 
 contextBridge.exposeInMainWorld('api', api);
