@@ -10,6 +10,7 @@ export const NAMED_CONSTANTS = {
 
 export const TYPES = {
   ProfileRepository: Symbol.for('Profile'),
+	ProfileService: Symbol.for('ProfileService'),
   Linker: Symbol.for('Linker'),
   ProviderAPI: Symbol.for('ProviderAPI'),
   GameRepository: Symbol.for('GameRepository'),

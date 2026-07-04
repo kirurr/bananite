@@ -9,8 +9,8 @@ import type {
 } from '../schema';
 
 export interface IModRepository {
-  getById(id: string): Promise<Mod | undefined>;
-  list(): Promise<FilledMod[]>;
+  getById(id: string): Promise<FilledMod | undefined>;
+  list(profileId?: number): Promise<FilledMod[]>;
   add(mod: NewMod): Promise<Mod>;
   delete(id: string): Promise<void>;
 }

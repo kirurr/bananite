@@ -23,6 +23,7 @@ import type { ILinker } from './linker/interface';
 import { WindowsLinker } from './linker/windows-linker';
 import type { IProfileRepository } from './profile/repository/interface';
 import { SQLiteProfileRepository } from './profile/repository/sqliteRepository';
+import { ProfileService, type IProfileService } from './profile/service';
 
 const container = new Container();
 
@@ -30,6 +31,7 @@ container
   .bind<IProfileRepository>(TYPES.ProfileRepository)
   .to(SQLiteProfileRepository)
   .inSingletonScope();
+
 
 container
   .bind<ILinker>(TYPES.Linker)
@@ -69,6 +71,8 @@ container
 // TODO: add CurseforgeProvider once implemented:
 // container.bind<IModProvider>(TYPES.ModProvider).to(CurseforgeProvider).inSingletonScope().whenNamed('curseforge');
 
+container.bind<IProfileService>(TYPES.ProfileService).to(ProfileService).inSingletonScope();
+
 /** Resolve a provider implementation by its name (the @named tag). */
 export function getModProvider(provider: ProviderTypes): IModProvider {
   return container.get<IModProvider>(TYPES.ModProvider, { name: provider });
@@ -84,5 +88,6 @@ export function getLinker(): ILinker {
   // TODO: pick linux/mac linker once implemented; only windows for now.
   return container.get<ILinker>(TYPES.Linker, { name: NAMED_CONSTANTS.system.windows });
 }
+
 
 export { container };

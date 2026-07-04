@@ -4,11 +4,12 @@ import { useGame } from './composables/game';
 import { useMods } from './composables/mod';
 import SettingsForm from './components/SettingsForm.vue';
 import DownloadMod from './components/DownloadMod.vue';
+import ProfilesTab from './components/ProfilesTab.vue';
 
 const { versions, loaders, syncData, settings, setSettings } = useGame();
 const { mods, addModByLink, downloadMod } = useMods();
 
-const tab = ref<'data' | 'mods'>('mods');
+const tab = ref<'data' | 'mods' | 'profiles'>('mods');
 const input = ref('');
 </script>
 
@@ -17,8 +18,12 @@ const input = ref('');
     <div class="flex flex-row gap-4">
       <button @click="tab = 'mods'">Mods</button>
       <button @click="tab = 'data'">Data</button>
+      <button @click="tab = 'profiles'">Profiles</button>
     </div>
   </div>
+	<template v-if="tab === 'profiles'">
+		<ProfilesTab />
+	</template>
   <template v-if="tab === 'mods'">
     <DownloadMod
       :handle-download="downloadMod"

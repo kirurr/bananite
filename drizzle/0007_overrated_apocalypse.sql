@@ -1,0 +1,1 @@
+ALTER TABLE `profiles` ADD `is_active` integer DEFAULT false;

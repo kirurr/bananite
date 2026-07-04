@@ -13,7 +13,16 @@ const api: Api = {
   mods: {
     addByLink: (link) => ipcRenderer.invoke(IpcChannel.ModsAddByLink, link),
     list: () => ipcRenderer.invoke(IpcChannel.ModsList),
-		downloadMod: (mod, gameVersion, loader) => ipcRenderer.invoke(IpcChannel.DownloadMod, mod, gameVersion, loader),
+    downloadMod: (mod, gameVersion, loader) =>
+      ipcRenderer.invoke(IpcChannel.DownloadMod, mod, gameVersion, loader),
+  },
+  profile: {
+    create: (profile) => ipcRenderer.invoke(IpcChannel.CreateProfile, profile),
+    get: (id) => ipcRenderer.invoke(IpcChannel.GetProfile, id),
+    list: () => ipcRenderer.invoke(IpcChannel.ListProfiles),
+    addMod: (profileId, modId) =>
+      ipcRenderer.invoke(IpcChannel.AddModToProfile, profileId, modId),
+    update: (profileId, data) => ipcRenderer.invoke(IpcChannel.UpdateProfile, profileId, data),
   },
   ...sharedHandler,
 };

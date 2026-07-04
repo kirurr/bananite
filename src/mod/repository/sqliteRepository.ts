@@ -1,4 +1,4 @@
-import { asc, desc, eq } from 'drizzle-orm';
+import { desc, eq } from 'drizzle-orm';
 import { injectable } from 'inversify';
 import { type DB, getDb } from '../../drizzle/client';
 import {
@@ -14,23 +14,22 @@ import {
   type FilledMod,
 } from '../schema';
 import type { IModInfoRepository, IModRepository, IModVersionRepository } from './interface';
+import { profileMods } from '../../profile/schema';
 
 @injectable()
 export class SQLiteModRepository implements IModRepository {
   private readonly db: DB = getDb();
 
-  async getById(id: string): Promise<Mod | undefined> {
-    const data = await this.db.select().from(mods).where(eq(mods.id, id)).limit(1);
-    return data[0];
-  }
-
-  async list(): Promise<FilledMod[]> {
+  async getById(id: string): Promise<FilledMod | undefined> {
     const rows = await this.db
       .select()
       .from(mods)
       .leftJoin(modInfos, eq(mods.id, modInfos.modId))
       .leftJoin(modVersions, eq(mods.id, modVersions.modId))
-      .orderBy(mods.id, desc(modVersions.date));
+      .orderBy(mods.id, desc(modVersions.date))
+      .where(eq(mods.id, id));
+
+    if (rows.length === 0) return undefined;
 
     const byId = new Map<string, FilledMod>();
     for (const row of rows) {
@@ -40,6 +39,45 @@ export class SQLiteModRepository implements IModRepository {
         byId.set(row.mods.id, filled);
       }
       if (row.mod_versions) filled.versions.push(row.mod_versions);
+    }
+
+    return [...byId.values()][0];
+  }
+
+  async list(): Promise<FilledMod[]>;
+  async list(profileId: number): Promise<FilledMod[]>;
+  async list(profileId?: number): Promise<FilledMod[]> {
+    const baseQuery = this.db
+      .select()
+      .from(mods)
+      .leftJoin(modInfos, eq(mods.id, modInfos.modId))
+      .leftJoin(modVersions, eq(mods.id, modVersions.modId));
+
+    const query = profileId
+      ? baseQuery
+          .innerJoin(profileMods, eq(mods.id, profileMods.modId))
+          .where(eq(profileMods.profileId, profileId))
+      : baseQuery;
+
+    const rows = await query.orderBy(mods.id, desc(modVersions.date));
+
+    const byId = new Map<string, FilledMod>();
+
+    for (const row of rows) {
+      let filled = byId.get(row.mods.id);
+
+      if (!filled) {
+        filled = {
+          ...row.mods,
+          info: row.mod_infos,
+          versions: [],
+        };
+        byId.set(row.mods.id, filled);
+      }
+
+      if (row.mod_versions) {
+        filled.versions.push(row.mod_versions);
+      }
     }
 
     return [...byId.values()];

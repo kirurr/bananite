@@ -1,5 +1,6 @@
 import { registerGameIpcHandlers } from '../game/handlers';
 import { registerModsIpcHandlers } from '../mod/handlers';
+import { registerProfileIpcHandlers } from '../profile/handlers';
 
 /**
  * Register every feature's IPC handlers. Main-process only — this is where the
@@ -11,4 +12,5 @@ import { registerModsIpcHandlers } from '../mod/handlers';
 export function registerIpcHandlers(): void {
   registerModsIpcHandlers();
   registerGameIpcHandlers();
+	registerProfileIpcHandlers();
 }
