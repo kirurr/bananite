@@ -4,6 +4,7 @@ import { profileExportSchema } from './schema';
 import { TYPES } from '../types';
 import type { IProfileRepository } from './repository/interface';
 import type { IModRepository } from '../mod/repository/interface';
+import type { FilledMod, ModVersion } from '../mod/schema';
 import { getLinker, getModProvider } from '../container';
 import type { IGameService } from '../game/service';
 
@@ -57,10 +58,7 @@ export class ProfileService implements IProfileService {
 
     if (!profile.isActive) return;
 
-    const modVersion = mod.versions.find(
-      (v) => v.gameVersion === profile.gameVersion && v.loader === profile.loader,
-    );
-
+    const modVersion = this.findModVersion(mod, profile);
     if (!modVersion) {
       console.error(`failed to link mod: ${mod.rawName} - Mod version not found`);
       return;
@@ -74,9 +72,7 @@ export class ProfileService implements IProfileService {
 
     await this.repo.removeMod(profileId, modId);
 
-    const modVersion = mod.versions.find(
-      (v) => v.gameVersion === profile.gameVersion && v.loader === profile.loader,
-    );
+    const modVersion = this.findModVersion(mod, profile);
     if (!modVersion) throw new Error('Mod version not found');
 
     await getLinker().deleteLink(modVersion.fileName);
@@ -124,15 +120,18 @@ export class ProfileService implements IProfileService {
     return { profile, mod, gameVersion, loader };
   }
 
+  private findModVersion(mod: FilledMod, profile: Profile): ModVersion | undefined {
+    return mod.versions.find(
+      (v) => v.gameVersion === profile.gameVersion && v.loader === profile.loader,
+    );
+  }
+
   private async setActive(profile: ProfileWithMods): Promise<void> {
     const linker = getLinker();
     await Promise.all(
       profile.mods
         .map((mod) => {
-          const modVersion = mod.versions.find(
-            (v) => v.gameVersion === profile.gameVersion && v.loader === profile.loader,
-          );
-
+          const modVersion = this.findModVersion(mod, profile);
           if (!modVersion) {
             console.error(`failed to link mod: ${mod.rawName} - Mod version not found`);
             return null;
@@ -149,10 +148,7 @@ export class ProfileService implements IProfileService {
     await Promise.all(
       profile.mods
         .map((mod) => {
-          const modVersion = mod.versions.find(
-            (v) => v.gameVersion === profile.gameVersion && v.loader === profile.loader,
-          );
-
+          const modVersion = this.findModVersion(mod, profile);
           if (!modVersion) {
             console.error(`failed to unlink mod: ${mod.rawName} - Mod version not found`);
             return null;
