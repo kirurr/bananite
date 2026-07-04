@@ -24,6 +24,8 @@ const api: Api = {
     removeMod: (profileId, modId) =>
       ipcRenderer.invoke(IpcChannel.RemoveModFromProfile, profileId, modId),
     update: (profileId, data) => ipcRenderer.invoke(IpcChannel.UpdateProfile, profileId, data),
+    exportProfile: (profileId) => ipcRenderer.invoke(IpcChannel.ExportProfile, profileId),
+    importProfile: () => ipcRenderer.invoke(IpcChannel.ImportProfile),
   },
   ...sharedHandler,
 };

@@ -39,6 +39,15 @@ export function useProfiles() {
     await updateProfile(profileId, { isActive: false });
   }
 
+  async function exportProfile(profileId: number) {
+    await window.api.profile.exportProfile(profileId);
+  }
+
+  async function importProfile() {
+    await window.api.profile.importProfile();
+    listProfiles();
+  }
+
   return {
     profiles,
     listProfiles,
@@ -48,5 +57,7 @@ export function useProfiles() {
     updateProfile,
     setActive,
     setInactive,
+    exportProfile,
+    importProfile,
   };
 }

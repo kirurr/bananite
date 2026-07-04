@@ -7,6 +7,8 @@ export const channel = {
   AddModToProfile: 'profile:add-mod-to-profile',
   RemoveModFromProfile: 'profile:remove-mod-from-profile',
   UpdateProfile: 'profile:update-profile',
+  ExportProfile: 'profile:export-profile',
+  ImportProfile: 'profile:import-profile',
 } as const;
 
 export type Api = {
@@ -16,4 +18,6 @@ export type Api = {
   addMod(profileId: number, modId: string): Promise<void>;
   removeMod(profileId: number, modId: string): Promise<void>;
   update(profileId: number, data: EditProfile): Promise<void>;
+  exportProfile(profileId: number): Promise<void>;
+  importProfile(): Promise<void>;
 };

@@ -5,6 +5,7 @@ import {
   profiles,
   type EditProfile,
   type NewProfile,
+  type Profile,
   type ProfileWithMods,
 } from '../schema';
 import { getDb, type DB } from '../../drizzle/client';
@@ -18,8 +19,9 @@ export class SQLiteProfileRepository implements IProfileRepository {
   private readonly db: DB = getDb();
 
   constructor(@inject(TYPES.ModRepository) private readonly modsRepo: IModRepository) {}
-  async create(profile: NewProfile): Promise<void> {
-    await this.db.insert(profiles).values(profile);
+  async create(profile: NewProfile): Promise<Profile> {
+    const [row] = await this.db.insert(profiles).values(profile).returning();
+    return row;
   }
 
   async getActive(): Promise<ProfileWithMods | null> {

@@ -59,7 +59,7 @@ export class ModrinthProvider implements IModProvider {
     const slug = getModSlugFromLink(link);
     const mod = await this.api.getFilledModFromSlug(slug);
 
-    this.service.createMod(
+    await this.service.createMod(
       {
         id: mod.id,
         slug,

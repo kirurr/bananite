@@ -1,5 +1,6 @@
 import { inject, injectable } from 'inversify';
 import type { EditProfile, NewProfile, Profile, ProfileWithMods } from './schema';
+import { profileExportSchema } from './schema';
 import { TYPES } from '../types';
 import type { IProfileRepository } from './repository/interface';
 import type { IModRepository } from '../mod/repository/interface';
@@ -15,6 +16,8 @@ export interface IProfileService {
   update(profileId: number, data: EditProfile): Promise<void>;
   unlinkActive(): Promise<void>;
   linkActive(): Promise<void>;
+  getProfileJSON(profileId: number): Promise<string>;
+  createProfileByJSON(json: string): Promise<void>;
 }
 
 @injectable()
@@ -33,7 +36,7 @@ export class ProfileService implements IProfileService {
   }
 
   async create(profile: NewProfile): Promise<void> {
-    return await this.repo.create(profile);
+    await this.repo.create(profile);
   }
 
   async get(id: number): Promise<Profile | null> {
@@ -159,5 +162,43 @@ export class ProfileService implements IProfileService {
         })
         .filter(Boolean),
     );
+  }
+
+  async getProfileJSON(profileId: number): Promise<string> {
+    const profile = await this.repo.get(profileId);
+    if (!profile) throw new Error('Profile not found');
+
+    const data = profileExportSchema.parse({
+      version: 1,
+      profile: {
+        name: profile.name,
+        gameVersion: profile.gameVersion,
+        loader: profile.loader,
+      },
+      mods: profile.mods.map((mod) => ({
+        id: mod.id,
+        provider: mod.provider,
+        url: mod.url,
+      })),
+    });
+
+    return JSON.stringify(data, null, 2);
+  }
+
+  async createProfileByJSON(json: string): Promise<void> {
+    const data = profileExportSchema.parse(JSON.parse(json));
+
+    const created = await this.repo.create(data.profile);
+
+    for (const mod of data.mods) {
+      try {
+        const existing = await this.modsRepo.getById(mod.id);
+        if (!existing) await getModProvider(mod.provider).addModByLink(mod.url);
+        await this.addMod(created.id, mod.id);
+      } catch (e) {
+        console.error(`failed to import mod: ${mod.id}`);
+        console.error(e);
+      }
+    }
   }
 }

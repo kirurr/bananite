@@ -10,6 +10,7 @@ const props = defineProps<{
   handleRemoveModFromProfile: (profileId: number, modId: string) => Promise<void>;
   setActive: () => Promise<void>;
   setInactive: () => Promise<void>;
+  exportProfile: (profileId: number) => Promise<void>;
 }>();
 
 const filteredMods = computed(() => {
@@ -55,6 +56,7 @@ function handleSubmit() {
       <template v-else>
         <button @click="setActive">Set active</button>
       </template>
+      <button @click="exportProfile(profile.id)">Export</button>
     </div>
   </li>
 </template>

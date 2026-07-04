@@ -1,7 +1,7 @@
-import type { EditProfile, NewProfile, ProfileWithMods } from '../schema';
+import type { EditProfile, NewProfile, Profile, ProfileWithMods } from '../schema';
 
 export interface IProfileRepository {
-  create(profile: NewProfile): Promise<void>;
+  create(profile: NewProfile): Promise<Profile>;
   getActive(): Promise<ProfileWithMods | null>;
   get(id: number): Promise<ProfileWithMods | null>;
   list(): Promise<ProfileWithMods[]>;
