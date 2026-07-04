@@ -37,10 +37,7 @@ function handleSubmit() {
         <li v-if="profile.mods.length === 0">No mods</li>
         <li v-for="mod in profile.mods" :key="mod.id">
           {{ mod.rawName }}
-          <Button
-						label="Remove"
-						@click="handleRemoveModFromProfile(profile.id, mod.id)"
-					/>
+          <Button label="Remove" @click="handleRemoveModFromProfile(profile.id, mod.id)" />
         </li>
       </ul>
       <div>

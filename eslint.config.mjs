@@ -7,7 +7,15 @@ import eslintConfigPrettier from 'eslint-config-prettier';
 
 export default tseslint.config(
   // Build output / vendored dirs are never linted.
-  { ignores: ['.vite/**', 'out/**', 'dist/**', 'node_modules/**'] },
+  {
+    ignores: [
+      '.vite/**',
+      'out/**',
+      'dist/**',
+      'node_modules/**',
+      './src/renderer/components/volt/**',
+    ],
+  },
 
   js.configs.recommended,
   ...tseslint.configs.recommended,

@@ -5,3 +5,4 @@ dist
 
 # Lockfile — let npm own its formatting
 package-lock.json
+src/renderer/components/volt
