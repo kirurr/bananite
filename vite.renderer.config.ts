@@ -12,6 +12,9 @@ export default defineConfig({
     outDir: path.resolve(process.cwd(), '.vite/renderer/main_window'),
     emptyOutDir: true,
   },
+  resolve: {
+    alias: [{ find: '@', replacement: path.resolve(__dirname, './src/renderer/') }],
+  },
   plugins: [vue(), tailwindcss()],
   server: {
     host: '0.0.0.0',

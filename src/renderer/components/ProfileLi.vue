@@ -2,6 +2,7 @@
 import { computed, ref } from 'vue';
 import type { ProfileWithMods } from '../../profile/schema';
 import type { FilledMod } from '../../mod/schema';
+import Button from './volt/Button.vue';
 
 const props = defineProps<{
   profile: ProfileWithMods;
@@ -36,7 +37,10 @@ function handleSubmit() {
         <li v-if="profile.mods.length === 0">No mods</li>
         <li v-for="mod in profile.mods" :key="mod.id">
           {{ mod.rawName }}
-          <button @click="handleRemoveModFromProfile(profile.id, mod.id)">Remove</button>
+          <Button
+						label="Remove"
+						@click="handleRemoveModFromProfile(profile.id, mod.id)"
+					/>
         </li>
       </ul>
       <div>
