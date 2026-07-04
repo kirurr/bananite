@@ -173,7 +173,6 @@ type ModrinthVersionList = z.infer<typeof ModrinthVersionListSchema>;
 
 @injectable()
 export class ModrinthAPIv270 implements IProviderAPI {
-
   private async getModInfo(slug: string): Promise<ModrinthProject> {
     try {
       const url = new URL(`/v2/project/${slug}`, BASE_URL);
@@ -231,9 +230,9 @@ export class ModrinthAPIv270 implements IProviderAPI {
         date: v.date_published,
         gameVersion: v.game_versions[0],
         loader: v.loaders[0],
-				downloadUrl: v.files[0].url,
-				fileName: v.files[0].filename,
-				fileSize: v.files[0].size,
+        downloadUrl: v.files[0].url,
+        fileName: v.files[0].filename,
+        fileSize: v.files[0].size,
       })),
     };
   }

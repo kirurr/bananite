@@ -21,9 +21,9 @@ const input = ref('');
       <button @click="tab = 'profiles'">Profiles</button>
     </div>
   </div>
-	<template v-if="tab === 'profiles'">
-		<ProfilesTab />
-	</template>
+  <template v-if="tab === 'profiles'">
+    <ProfilesTab />
+  </template>
   <template v-if="tab === 'mods'">
     <DownloadMod
       :handle-download="downloadMod"
@@ -51,10 +51,7 @@ const input = ref('');
     </div>
   </template>
   <template v-if="tab === 'data'">
-    <SettingsForm
-      :settings="settings"
-      :set-settings="setSettings"
-    />
+    <SettingsForm :settings="settings" :set-settings="setSettings" />
     <div>
       <div class="flex flex-row gap-4">
         <button @click="syncData">Sync Data</button>

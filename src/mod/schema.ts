@@ -23,9 +23,9 @@ export const modVersions = sqliteTable('mod_versions', {
   date: text('date').notNull(),
   gameVersion: text('game_version').notNull(),
   loader: text('loader').notNull(),
-	downloadUrl: text('download_url').notNull(),
-	fileName: text('file_name').notNull(),
-	fileSize: integer('file_size').notNull(),
+  downloadUrl: text('download_url').notNull(),
+  fileName: text('file_name').notNull(),
+  fileSize: integer('file_size').notNull(),
 });
 
 export type ModVersion = typeof modVersions.$inferSelect;

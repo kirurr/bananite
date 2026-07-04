@@ -7,8 +7,9 @@ const props = defineProps<{
   profile: ProfileWithMods;
   mods: FilledMod[];
   handleAddModToProfile: (profileId: number, modId: string) => Promise<void>;
-	setActive: () => Promise<void>;
-	setInactive: () => Promise<void>;
+  handleRemoveModFromProfile: (profileId: number, modId: string) => Promise<void>;
+  setActive: () => Promise<void>;
+  setInactive: () => Promise<void>;
 }>();
 
 const filteredMods = computed(() => {
@@ -34,6 +35,7 @@ function handleSubmit() {
         <li v-if="profile.mods.length === 0">No mods</li>
         <li v-for="mod in profile.mods" :key="mod.id">
           {{ mod.rawName }}
+          <button @click="handleRemoveModFromProfile(profile.id, mod.id)">Remove</button>
         </li>
       </ul>
       <div>
@@ -47,12 +49,12 @@ function handleSubmit() {
           <button type="submit">Add</button>
         </form>
       </div>
-			<template v-if="profile.isActive">
-				<button @click="setInactive">Set inactive</button>
-			</template>
-			<template v-else>
-				<button @click="setActive">Set active</button>
-			</template>
+      <template v-if="profile.isActive">
+        <button @click="setInactive">Set inactive</button>
+      </template>
+      <template v-else>
+        <button @click="setActive">Set active</button>
+      </template>
     </div>
   </li>
 </template>

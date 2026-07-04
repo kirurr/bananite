@@ -24,6 +24,7 @@ import { WindowsLinker } from './linker/windows-linker';
 import type { IProfileRepository } from './profile/repository/interface';
 import { SQLiteProfileRepository } from './profile/repository/sqliteRepository';
 import { ProfileService, type IProfileService } from './profile/service';
+import { SystemService, type ISystemService } from './system/service';
 
 const container = new Container();
 
@@ -31,7 +32,6 @@ container
   .bind<IProfileRepository>(TYPES.ProfileRepository)
   .to(SQLiteProfileRepository)
   .inSingletonScope();
-
 
 container
   .bind<ILinker>(TYPES.Linker)
@@ -73,6 +73,8 @@ container
 
 container.bind<IProfileService>(TYPES.ProfileService).to(ProfileService).inSingletonScope();
 
+container.bind<ISystemService>(TYPES.SystemService).to(SystemService).inSingletonScope();
+
 /** Resolve a provider implementation by its name (the @named tag). */
 export function getModProvider(provider: ProviderTypes): IModProvider {
   return container.get<IModProvider>(TYPES.ModProvider, { name: provider });
@@ -83,11 +85,16 @@ export function getGameAPI(provider: ProviderTypes): IProviderAPI {
   return container.get<IProviderAPI>(TYPES.ProviderAPI, { name: provider });
 }
 
+/** Resolve the profile service. Resolved lazily (not constructor-injected)
+ * to avoid a GameService <-> ProfileService circular dependency. */
+export function getProfileService(): IProfileService {
+  return container.get<IProfileService>(TYPES.ProfileService);
+}
+
 /** Resolve the linker implementation for the current platform. */
 export function getLinker(): ILinker {
   // TODO: pick linux/mac linker once implemented; only windows for now.
   return container.get<ILinker>(TYPES.Linker, { name: NAMED_CONSTANTS.system.windows });
 }
-
 
 export { container };

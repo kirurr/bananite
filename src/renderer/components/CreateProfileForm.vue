@@ -14,15 +14,15 @@ const gameVersion = ref<string>();
 const loader = ref<string>();
 
 function handleSubmit() {
-	if (!name.value || !gameVersion.value || !loader.value) return console.error('Fields not set');
+  if (!name.value || !gameVersion.value || !loader.value) return console.error('Fields not set');
 
-	const profile: NewProfile = {
-		name: name.value,
-		gameVersion: gameVersion.value,
-		loader: loader.value,
-	};
+  const profile: NewProfile = {
+    name: name.value,
+    gameVersion: gameVersion.value,
+    loader: loader.value,
+  };
 
-	props.handleCreate(profile);
+  props.handleCreate(profile);
 }
 </script>
 

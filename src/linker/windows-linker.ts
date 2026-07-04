@@ -5,6 +5,10 @@ import { TYPES } from '../types';
 import type { ILinker } from './interface';
 import { inject, injectable } from 'inversify';
 
+function isErrnoException(error: unknown): error is NodeJS.ErrnoException {
+  return error instanceof Error && 'code' in error;
+}
+
 @injectable()
 export class WindowsLinker implements ILinker {
   constructor(@inject(TYPES.GameService) private readonly gameSerivce: IGameService) {}
@@ -14,7 +18,15 @@ export class WindowsLinker implements ILinker {
 
     if (!settings) throw new Error('Game settings not found');
 
-    await link(join(settings.downloadPath, file), join(settings.gamePath, file));
+    try {
+      await link(join(settings.downloadPath, file), join(settings.gamePath, file));
+    } catch (err) {
+      if (isErrnoException(err) && err.code === 'EEXIST') {
+        console.warn(`File already exists: ${file}`);
+        return;
+      }
+      throw err;
+    }
   }
 
   async deleteLink(file: string): Promise<void> {
@@ -22,6 +34,14 @@ export class WindowsLinker implements ILinker {
 
     if (!settings) throw new Error('Game settings not found');
 
-    await unlink(join(settings.gamePath, file));
+    try {
+      await unlink(join(settings.gamePath, file));
+    } catch (err) {
+      if (isErrnoException(err) && err.code === 'ENOENT') {
+        console.warn(`File not found: ${file}`);
+        return;
+      }
+      throw err;
+    }
   }
 }

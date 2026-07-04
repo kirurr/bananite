@@ -31,14 +31,14 @@ export function useMods() {
 
   getMods();
 
-	async function downloadMod(mod: FilledMod, gameVersion: GameVersion, loader: Loader) {
-		await window.api.mods.downloadMod(mod, gameVersion, loader);
-	}
+  async function downloadMod(mod: FilledMod, gameVersion: GameVersion, loader: Loader) {
+    await window.api.mods.downloadMod(mod, gameVersion, loader);
+  }
 
   return {
     mods,
     getMods,
     addModByLink,
-		downloadMod,
+    downloadMod,
   };
 }

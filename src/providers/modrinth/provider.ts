@@ -6,9 +6,8 @@ import type { IProviderAPI } from '../api/interface';
 import type { GameVersion, Loader } from '../../game/schema';
 import type { FilledMod } from '../../mod/schema';
 import type { IGameService } from '../../game/service';
-import { dirname, join } from 'path';
-import { createWriteStream, mkdirSync } from 'fs';
-import { pipeline } from 'stream/promises';
+import type { ISystemService } from '../../system/service';
+import { join } from 'path';
 
 function getModSlugFromLink(link: string): string {
   const regex = /\/mods?\/([a-z0-9-]+)/i;
@@ -19,32 +18,12 @@ function getModSlugFromLink(link: string): string {
   return match[1];
 }
 
-async function downloadMod(url: string, destination: string): Promise<void> {
-  const response = await fetch(url);
-
-  if (!response.ok) {
-    throw new Error(`HTTP error: ${response.status}`);
-  }
-
-  // создаём папки при необходимости
-  mkdirSync(dirname(destination), { recursive: true });
-
-  if (!response.body) {
-    throw new Error('No response body');
-  }
-
-  await pipeline(
-    //eslint-disable-next-line @typescript-eslint/no-explicit-any
-    response.body as any,
-    createWriteStream(destination),
-  );
-}
-
 @injectable()
 export class ModrinthProvider implements IModProvider {
   private readonly service: IModService;
   private readonly gameSerivce: IGameService;
   private readonly api: IProviderAPI;
+  private readonly systemSerivce: ISystemService;
 
   constructor(
     @inject(TYPES.ModService) service: IModService,
@@ -52,10 +31,12 @@ export class ModrinthProvider implements IModProvider {
     @inject(TYPES.ProviderAPI)
     @named(NAMED_CONSTANTS.providers.modrinth)
     api: IProviderAPI,
+    @inject(TYPES.SystemService) systemSerivce: ISystemService,
   ) {
     this.service = service;
     this.gameSerivce = gameSerivce;
     this.api = api;
+    this.systemSerivce = systemSerivce;
   }
 
   async downloadMod(mod: FilledMod, gameVersion: GameVersion, loader: Loader): Promise<void> {
@@ -68,7 +49,10 @@ export class ModrinthProvider implements IModProvider {
     );
     if (!version) throw new Error('Version for gameVersion and loader not found');
 
-    await downloadMod(version.downloadUrl, join(settings.downloadPath, version.fileName));
+    await this.systemSerivce.downloadMod(
+      version.downloadUrl,
+      join(settings.downloadPath, version.fileName),
+    );
   }
 
   async addModByLink(link: string): Promise<void> {

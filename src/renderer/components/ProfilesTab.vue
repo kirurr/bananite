@@ -12,6 +12,7 @@ const {
 	profiles,
 	createProfile,
 	addModToProfile,
+	removeModFromProfile,
 	setActive,
 	setInactive,
 } = useProfiles();
@@ -32,8 +33,9 @@ const {
       :profile="profile"
       :mods="mods"
       :handle-add-mod-to-profile="addModToProfile"
-			:set-active="() => setActive(profile.id)"
-			:set-inactive="() => setInactive(profile.id)"
+			:handle-remove-mod-from-profile="removeModFromProfile"
+      :set-active="() => setActive(profile.id)"
+      :set-inactive="() => setInactive(profile.id)"
     />
   </ul>
 </template>

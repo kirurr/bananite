@@ -20,8 +20,9 @@ const api: Api = {
     create: (profile) => ipcRenderer.invoke(IpcChannel.CreateProfile, profile),
     get: (id) => ipcRenderer.invoke(IpcChannel.GetProfile, id),
     list: () => ipcRenderer.invoke(IpcChannel.ListProfiles),
-    addMod: (profileId, modId) =>
-      ipcRenderer.invoke(IpcChannel.AddModToProfile, profileId, modId),
+    addMod: (profileId, modId) => ipcRenderer.invoke(IpcChannel.AddModToProfile, profileId, modId),
+    removeMod: (profileId, modId) =>
+      ipcRenderer.invoke(IpcChannel.RemoveModFromProfile, profileId, modId),
     update: (profileId, data) => ipcRenderer.invoke(IpcChannel.UpdateProfile, profileId, data),
   },
   ...sharedHandler,

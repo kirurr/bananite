@@ -8,7 +8,7 @@ import {
   type ProfileWithMods,
 } from '../schema';
 import { getDb, type DB } from '../../drizzle/client';
-import { eq } from 'drizzle-orm';
+import { and, eq } from 'drizzle-orm';
 import type { IModRepository } from '../../mod/repository/interface';
 import { TYPES } from '../../types';
 import type { FilledMod } from '../../mod/schema';
@@ -20,6 +20,18 @@ export class SQLiteProfileRepository implements IProfileRepository {
   constructor(@inject(TYPES.ModRepository) private readonly modsRepo: IModRepository) {}
   async create(profile: NewProfile): Promise<void> {
     await this.db.insert(profiles).values(profile);
+  }
+
+  async getActive(): Promise<ProfileWithMods | null> {
+    const rows = await this.db.select().from(profiles).where(eq(profiles.isActive, true));
+    if (rows.length === 0) return null;
+    const profile = rows[0];
+    const mods = await this.modsRepo.list(profile.id);
+
+    return {
+      ...profile,
+      mods,
+    };
   }
 
   async get(id: number): Promise<ProfileWithMods | null> {
@@ -62,6 +74,12 @@ export class SQLiteProfileRepository implements IProfileRepository {
 
   async addMod(profileId: number, modId: string): Promise<void> {
     await this.db.insert(profileMods).values({ profileId, modId });
+  }
+
+  async removeMod(profileId: number, modId: string): Promise<void> {
+    await this.db
+      .delete(profileMods)
+      .where(and(eq(profileMods.profileId, profileId), eq(profileMods.modId, modId)));
   }
 
   async edit(profileId: number, profile: EditProfile): Promise<void> {

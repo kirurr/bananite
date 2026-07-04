@@ -125,9 +125,7 @@
       "indexes": {
         "mod_infos_mod_id_unique": {
           "name": "mod_infos_mod_id_unique",
-          "columns": [
-            "mod_id"
-          ],
+          "columns": ["mod_id"],
           "isUnique": true
         }
       },
@@ -136,12 +134,8 @@
           "name": "mod_infos_mod_id_mods_id_fk",
           "tableFrom": "mod_infos",
           "tableTo": "mods",
-          "columnsFrom": [
-            "mod_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["mod_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -230,12 +224,8 @@
           "name": "mod_versions_mod_id_mods_id_fk",
           "tableFrom": "mod_versions",
           "tableTo": "mods",
-          "columnsFrom": [
-            "mod_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["mod_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -320,12 +310,8 @@
           "name": "profile_mods_profile_id_profiles_id_fk",
           "tableFrom": "profile_mods",
           "tableTo": "profiles",
-          "columnsFrom": [
-            "profile_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["profile_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -333,12 +319,8 @@
           "name": "profile_mods_mod_id_mods_id_fk",
           "tableFrom": "profile_mods",
           "tableTo": "mods",
-          "columnsFrom": [
-            "mod_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["mod_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -393,12 +375,8 @@
           "name": "profiles_game_version_game_versions_version_fk",
           "tableFrom": "profiles",
           "tableTo": "game_versions",
-          "columnsFrom": [
-            "game_version"
-          ],
-          "columnsTo": [
-            "version"
-          ],
+          "columnsFrom": ["game_version"],
+          "columnsTo": ["version"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -406,12 +384,8 @@
           "name": "profiles_loader_loaders_name_fk",
           "tableFrom": "profiles",
           "tableTo": "loaders",
-          "columnsFrom": [
-            "loader"
-          ],
-          "columnsTo": [
-            "name"
-          ],
+          "columnsFrom": ["loader"],
+          "columnsTo": ["name"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }

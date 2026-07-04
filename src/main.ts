@@ -11,7 +11,7 @@ if (started) {
   app.quit();
 }
 
-let mainWindow: BrowserWindow | null = null
+let mainWindow: BrowserWindow | null = null;
 
 const createWindow = () => {
   // Create the browser window.
@@ -64,13 +64,13 @@ app.on('activate', () => {
 // code. You can also put them in separate files and import them here.
 //
 ipcMain.handle(IpcChannel.OpenDialog, async (event, options = {}) => {
-	if (!mainWindow) return null
+  if (!mainWindow) return null;
 
   const result = await dialog.showOpenDialog(mainWindow, {
     properties: ['openDirectory'],
-    ...options
-  })
+    ...options,
+  });
 
-  if (result.canceled) return null
-  return result.filePaths[0]
-})
+  if (result.canceled) return null;
+  return result.filePaths[0];
+});

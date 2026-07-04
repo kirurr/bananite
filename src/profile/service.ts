@@ -11,7 +11,10 @@ export interface IProfileService {
   get(id: number): Promise<Profile | null>;
   list(): Promise<ProfileWithMods[]>;
   addMod(profileId: number, modId: string): Promise<void>;
+  removeMod(profileId: number, modId: string): Promise<void>;
   update(profileId: number, data: EditProfile): Promise<void>;
+  unlinkActive(): Promise<void>;
+  linkActive(): Promise<void>;
 }
 
 @injectable()
@@ -42,15 +45,68 @@ export class ProfileService implements IProfileService {
   }
 
   async addMod(profileId: number, modId: string): Promise<void> {
-    const [profile, mod] = await Promise.all([
-      this.repo.get(profileId),
-      this.modsRepo.getById(modId),
-    ]);
-    if (!profile || !mod) throw new Error('Failed to add mod to profile: Profile or mod not found');
+    const { profile, mod, gameVersion, loader } = await this.resolveModContext(profileId, modId);
 
     await this.repo.addMod(profileId, modId);
 
     const provider = getModProvider(mod.provider);
+    await provider.downloadMod(mod, gameVersion, loader);
+
+    if (!profile.isActive) return;
+
+    const modVersion = mod.versions.find(
+      (v) => v.gameVersion === profile.gameVersion && v.loader === profile.loader,
+    );
+
+    if (!modVersion) {
+      console.error(`failed to link mod: ${mod.rawName} - Mod version not found`);
+      return;
+    }
+
+    await getLinker().createLink(modVersion.fileName);
+  }
+
+  async removeMod(profileId: number, modId: string): Promise<void> {
+    const { profile, mod } = await this.resolveModContext(profileId, modId);
+
+    await this.repo.removeMod(profileId, modId);
+
+    const modVersion = mod.versions.find(
+      (v) => v.gameVersion === profile.gameVersion && v.loader === profile.loader,
+    );
+    if (!modVersion) throw new Error('Mod version not found');
+
+    await getLinker().deleteLink(modVersion.fileName);
+  }
+
+  async update(profileId: number, data: EditProfile): Promise<void> {
+    const profile = await this.repo.get(profileId);
+    if (!profile) throw new Error('Profile not found');
+
+    await this.repo.edit(profileId, data);
+
+    if (data.isActive === true) await this.setActive(profile);
+    else if (data.isActive === false) await this.setInactive(profile);
+  }
+
+  async unlinkActive(): Promise<void> {
+    const profile = await this.repo.getActive();
+    if (!profile) return;
+    await this.setInactive(profile);
+  }
+
+  async linkActive(): Promise<void> {
+    const profile = await this.repo.getActive();
+    if (!profile) return;
+    await this.setActive(profile);
+  }
+
+  private async resolveModContext(profileId: number, modId: string) {
+    const [profile, mod] = await Promise.all([
+      this.repo.get(profileId),
+      this.modsRepo.getById(modId),
+    ]);
+    if (!profile || !mod) throw new Error('Profile or mod not found');
 
     const [gameVersions, loaders] = await Promise.all([
       this.gameSerivce.getVersions(),
@@ -62,31 +118,7 @@ export class ProfileService implements IProfileService {
     const loader = loaders.find((l) => l.name === profile.loader);
     if (!loader) throw new Error('Loader not found');
 
-    await provider.downloadMod(mod, gameVersion, loader);
-
-    if (!profile.isActive) return;
-
-    const linker = getLinker();
-    const modVersion = mod.versions.find(
-      (v) => v.gameVersion === profile.gameVersion && v.loader === profile.loader,
-    );
-
-    if (!modVersion) {
-      console.error(`failed to link mod: ${mod.rawName} - Mod version not found`);
-      return;
-    }
-
-    await linker.createLink(modVersion.fileName);
-  }
-
-  async update(profileId: number, data: EditProfile): Promise<void> {
-    const profile = await this.repo.get(profileId);
-    if (!profile) throw new Error('Profile not found');
-
-    await this.repo.edit(profileId, data);
-
-    if (data.isActive === true) await this.setActive(profile);
-    else if (data.isActive === false) await this.setInactive(profile);
+    return { profile, mod, gameVersion, loader };
   }
 
   private async setActive(profile: ProfileWithMods): Promise<void> {

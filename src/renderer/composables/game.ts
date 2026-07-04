@@ -32,8 +32,8 @@ export function useGame() {
 
   async function syncData() {
     await window.api.game.syncData();
-		getVersions();
-		getLoaders();
+    getVersions();
+    getLoaders();
   }
 
   return {

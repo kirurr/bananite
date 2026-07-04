@@ -10,7 +10,7 @@ export const NAMED_CONSTANTS = {
 
 export const TYPES = {
   ProfileRepository: Symbol.for('Profile'),
-	ProfileService: Symbol.for('ProfileService'),
+  ProfileService: Symbol.for('ProfileService'),
   Linker: Symbol.for('Linker'),
   ProviderAPI: Symbol.for('ProviderAPI'),
   GameRepository: Symbol.for('GameRepository'),
@@ -22,4 +22,5 @@ export const TYPES = {
   // Single token for every provider implementation; disambiguated with @named
   // ('modrinth', 'curseforge', ...) at bind- and inject-time.
   ModProvider: Symbol.for('ModProvider'),
+  SystemService: Symbol.for('SystemService'),
 };

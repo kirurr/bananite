@@ -3,6 +3,7 @@ import { NAMED_CONSTANTS, TYPES } from '../types';
 import type { IGameRepository } from './repository/interface';
 import { type GameSettings, type GameVersion, type Loader, type NewGameSettings } from './schema';
 import type { IProviderAPI } from '../providers/api/interface';
+import { getProfileService } from '../container';
 
 export interface IGameService {
   syncData(): Promise<void>;
@@ -52,6 +53,10 @@ export class GameService implements IGameService {
   }
 
   async setSettings(data: NewGameSettings): Promise<void> {
-    return this.repo.setGameSettings(data);
+    const profileService = getProfileService();
+
+    await profileService.unlinkActive();
+    await this.repo.setGameSettings(data);
+    await profileService.linkActive();
   }
 }
