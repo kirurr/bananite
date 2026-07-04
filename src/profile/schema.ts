@@ -9,7 +9,7 @@ export const profiles = sqliteTable('profiles', {
   name: text('name').notNull(),
   gameVersion: text('game_version').references(() => gameVersions.version),
   loader: text('loader').references(() => loaders.name),
-  isActive: integer('is_active', { mode: 'boolean' }).default(false),
+  isActive: integer('is_active', { mode: 'boolean' }).default(false).unique(),
 });
 
 export type Profile = typeof profiles.$inferSelect;

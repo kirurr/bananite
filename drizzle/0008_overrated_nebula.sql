@@ -1,0 +1,1 @@
+CREATE UNIQUE INDEX `profiles_is_active_unique` ON `profiles` (`is_active`);
