@@ -21,10 +21,10 @@ export function useProfiles() {
     listProfiles();
   }
 
-	async function removeModFromProfile(profileId: number, modId: string) {
-		await window.api.profile.removeMod(profileId, modId);
-		listProfiles();
-	}
+  async function removeModFromProfile(profileId: number, modId: string) {
+    await window.api.profile.removeMod(profileId, modId);
+    listProfiles();
+  }
 
   async function updateProfile(profileId: number, data: EditProfile) {
     await window.api.profile.update(profileId, data);
@@ -44,7 +44,7 @@ export function useProfiles() {
     listProfiles,
     createProfile,
     addModToProfile,
-		removeModFromProfile,
+    removeModFromProfile,
     updateProfile,
     setActive,
     setInactive,

@@ -47,20 +47,20 @@ function handleSubmit(e: Event) {
 
 <template>
   <form class="flex flex-row gap-4" @submit="handleSubmit">
-		<div>
-			<label for="game-path">Game path</label>
-			<div @click="handleChangeGamePath">
-				{{ gamePath }}
-				<span v-if="!gamePath">game path is not set</span>
-			</div>
-		</div>
-		<div>
-			<label for="download-path">Download path</label>
-			<div @click="handleChangeDownloadPath">
-				{{ downloadPath }}
-				<span v-if="!downloadPath">download path is not set</span>
-			</div>
-		</div>
+    <div>
+      <label for="game-path">Game path</label>
+      <div @click="handleChangeGamePath">
+        {{ gamePath }}
+        <span v-if="!gamePath">game path is not set</span>
+      </div>
+    </div>
+    <div>
+      <label for="download-path">Download path</label>
+      <div @click="handleChangeDownloadPath">
+        {{ downloadPath }}
+        <span v-if="!downloadPath">download path is not set</span>
+      </div>
+    </div>
     <button type="submit">Save</button>
   </form>
 </template>

@@ -5,7 +5,7 @@ export const channel = {
   GetProfile: 'profile:get-profile',
   ListProfiles: 'profile:list-profiles',
   AddModToProfile: 'profile:add-mod-to-profile',
-	RemoveModFromProfile: 'profile:remove-mod-from-profile',
+  RemoveModFromProfile: 'profile:remove-mod-from-profile',
   UpdateProfile: 'profile:update-profile',
 } as const;
 
@@ -14,6 +14,6 @@ export type Api = {
   get(id: number): Promise<Profile | null>;
   list(): Promise<ProfileWithMods[]>;
   addMod(profileId: number, modId: string): Promise<void>;
-	removeMod(profileId: number, modId: string): Promise<void>;
+  removeMod(profileId: number, modId: string): Promise<void>;
   update(profileId: number, data: EditProfile): Promise<void>;
 };

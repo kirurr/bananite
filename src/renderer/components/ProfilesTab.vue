@@ -8,14 +8,8 @@ import ProfileLi from './ProfileLi.vue';
 const { loaders, versions } = useGame();
 const { mods } = useMods();
 
-const {
-	profiles,
-	createProfile,
-	addModToProfile,
-	removeModFromProfile,
-	setActive,
-	setInactive,
-} = useProfiles();
+const { profiles, createProfile, addModToProfile, removeModFromProfile, setActive, setInactive } =
+  useProfiles();
 </script>
 
 <template>
@@ -33,7 +27,7 @@ const {
       :profile="profile"
       :mods="mods"
       :handle-add-mod-to-profile="addModToProfile"
-			:handle-remove-mod-from-profile="removeModFromProfile"
+      :handle-remove-mod-from-profile="removeModFromProfile"
       :set-active="() => setActive(profile.id)"
       :set-inactive="() => setInactive(profile.id)"
     />
