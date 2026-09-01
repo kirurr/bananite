@@ -31,6 +31,9 @@ import { createApp } from 'vue';
 import App from './App.vue';
 import PrimeVue from 'primevue/config';
 
+// typescript-eslint не умеет типизировать SFC (это работа Volar/vue-tsc),
+// поэтому App.vue для него — `error typed`. Реальную проверку даёт `npm run typecheck`.
+// eslint-disable-next-line @typescript-eslint/no-unsafe-argument
 const app = createApp(App);
 app.use(PrimeVue, {
   unstyled: true,
