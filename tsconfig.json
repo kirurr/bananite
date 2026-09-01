@@ -3,16 +3,43 @@
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "verbatimModuleSyntax": true,
-    "strict": true,
     "target": "ESNext",
     "module": "ESNext",
+    "lib": ["ESNext", "DOM", "DOM.Iterable"],
+    "moduleResolution": "Bundler",
     "allowJs": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
-    "noImplicitAny": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
     "sourceMap": true,
     "outDir": "dist",
-    "moduleResolution": "Bundler",
-    "resolveJsonModule": true
-  }
+
+    /* Strictness: everything on. */
+    "strict": true,
+    "noImplicitAny": true,
+    "noImplicitOverride": true,
+    "noImplicitReturns": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUncheckedIndexedAccess": true,
+    "forceConsistentCasingInFileNames": true,
+    "allowUnreachableCode": false,
+    "allowUnusedLabels": false
+  },
+
+  /* Volar: всё неизвестное в шаблоне (компоненты, пропсы, события,
+     директивы, слоты) — ошибка, а не тихий resolveComponent в рантайме. */
+  "vueCompilerOptions": {
+    "checkUnknownComponents": true,
+    "checkUnknownProps": true,
+    "checkUnknownEvents": true,
+    "checkUnknownDirectives": true,
+    "checkUnknownSlots": true,
+    "strictVModel": true
+  },
+
+  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.vue", "*.ts", "*.d.ts"],
+  "exclude": ["node_modules", ".vite", "out", "dist"]
 }

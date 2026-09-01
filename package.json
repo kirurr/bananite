@@ -6,17 +6,21 @@
   "main": ".vite/build/main.js",
   "private": true,
   "scripts": {
+    "prepare": "git config core.hooksPath .githooks || exit 0",
     "start": "electron-forge start",
     "package": "electron-forge package",
     "make": "electron-forge make",
     "publish": "electron-forge publish",
     "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "typecheck": "vue-tsc --noEmit",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "npm rebuild better-sqlite3 && drizzle-kit migrate && npx electron-rebuild -f -w better-sqlite3",
     "db:push": "drizzle-kit push",
-    "db:studio": "drizzle-kit studio"
+    "db:studio": "drizzle-kit studio",
+    "check": "npm run typecheck && npm run lint && npm run format:check"
   },
   "keywords": [],
   "author": "timon",
@@ -52,7 +56,8 @@
     "typescript": "^6.0.3",
     "typescript-eslint": "^8.61.1",
     "vite": "^8.0.16",
-    "vue-eslint-parser": "^10.4.1"
+    "vue-eslint-parser": "^10.4.1",
+    "vue-tsc": "^3.3.11"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.3.1",

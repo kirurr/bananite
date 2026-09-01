@@ -1,0 +1,9 @@
+#!/bin/sh
+# Блокирует коммит, если проект не проходит проверки.
+# Подключается один раз: git config core.hooksPath .githooks
+# Разовый обход (осознанно): git commit --no-verify
+
+set -e
+
+echo "pre-commit: npm run check"
+npm run check
