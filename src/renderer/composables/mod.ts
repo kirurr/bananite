@@ -11,30 +11,28 @@ import type { GameVersion, Loader } from '../../game/schema';
  * The type says `api` is always there, so this guards a case the types don't.
  */
 export function useElectron() {
-  const isElectron = window.api != null;
+  const isElectron = (window as { api?: unknown }).api != null;
   return { isElectron };
 }
 
-/** Reactive view of the mods stored in the main-process database. */
+const mods = ref<FilledMod[]>([]);
+
+async function getMods() {
+  const result = await window.api.mods.list();
+  mods.value = result;
+}
+
+void getMods();
+async function addModByLink(link: string) {
+  await window.api.mods.addByLink(link);
+  await getMods();
+}
+
+async function downloadMod(mod: FilledMod, gameVersion: GameVersion, loader: Loader) {
+  await window.api.mods.downloadMod(mod, gameVersion, loader);
+}
+
 export function useMods() {
-  const mods = ref<FilledMod[]>([]);
-
-  async function getMods() {
-    const result = await window.api.mods.list();
-    mods.value = result;
-  }
-
-  async function addModByLink(link: string) {
-    await window.api.mods.addByLink(link);
-    getMods();
-  }
-
-  getMods();
-
-  async function downloadMod(mod: FilledMod, gameVersion: GameVersion, loader: Loader) {
-    await window.api.mods.downloadMod(mod, gameVersion, loader);
-  }
-
   return {
     mods,
     getMods,
