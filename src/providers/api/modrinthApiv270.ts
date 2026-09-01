@@ -3,7 +3,6 @@ import type { IProviderAPI } from './interface';
 import { z } from 'zod';
 import {
   type GameVersion,
-  type Loader,
   type NewGameVersion,
   type NewLoader,
   newLoaderSchema,
@@ -178,7 +177,7 @@ export class ModrinthAPIv270 implements IProviderAPI {
       const url = new URL(`/v2/project/${slug}`, BASE_URL);
       const req = await fetch(url);
 
-      const data = await req.json();
+      const data: unknown = await req.json();
       return ModrinthProjectSchema.parse(data);
     } catch (e) {
       console.error('fetch mod info failed');
@@ -192,7 +191,7 @@ export class ModrinthAPIv270 implements IProviderAPI {
       const url = new URL(`/v2/project/${slug}/version`, BASE_URL);
       const req = await fetch(url);
 
-      const data = await req.json();
+      const data: unknown = await req.json();
       return ModrinthVersionListSchema.parse(data);
     } catch (e) {
       console.error('fetch mod versions failed');
@@ -222,18 +221,29 @@ export class ModrinthAPIv270 implements IProviderAPI {
         description: mod.description,
         iconUrl: mod.icon_url ?? null,
       },
-      versions: versions.map((v) => ({
-        id: v.id,
-        modId: mod.id,
-        name: v.name,
-        version: v.version_number,
-        date: v.date_published,
-        gameVersion: v.game_versions[0],
-        loader: v.loaders[0],
-        downloadUrl: v.files[0].url,
-        fileName: v.files[0].filename,
-        fileSize: v.files[0].size,
-      })),
+      // Версии без файла / игровой версии / лоадера бесполезны для установки,
+      // поэтому отбрасываем их, а не падаем на всём моде.
+      versions: versions.flatMap((v) => {
+        const [gameVersion] = v.game_versions;
+        const [loader] = v.loaders;
+        const [file] = v.files;
+        if (!gameVersion || !loader || !file) return [];
+
+        return [
+          {
+            id: v.id,
+            modId: mod.id,
+            name: v.name,
+            version: v.version_number,
+            date: v.date_published,
+            gameVersion,
+            loader,
+            downloadUrl: file.url,
+            fileName: file.filename,
+            fileSize: file.size,
+          },
+        ];
+      }),
     };
   }
 
@@ -241,7 +251,7 @@ export class ModrinthAPIv270 implements IProviderAPI {
     try {
       const url = new URL('/v2/tag/game_version', BASE_URL);
       const req = await fetch(url);
-      const data = await req.json();
+      const data: unknown = await req.json();
 
       const versions = z.array(modrinthVersionSchema).parse(data);
 
@@ -257,7 +267,7 @@ export class ModrinthAPIv270 implements IProviderAPI {
     try {
       const url = new URL('/v2/tag/loader', BASE_URL);
       const req = await fetch(url);
-      const data = await req.json();
+      const data: unknown = await req.json();
 
       return z.array(newLoaderSchema).parse(data);
     } catch (e) {

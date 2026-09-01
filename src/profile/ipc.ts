@@ -11,7 +11,7 @@ export const channel = {
   ImportProfile: 'profile:import-profile',
 } as const;
 
-export type Api = {
+export interface Api {
   create(profile: NewProfile): Promise<void>;
   get(id: number): Promise<Profile | null>;
   list(): Promise<ProfileWithMods[]>;
@@ -20,4 +20,4 @@ export type Api = {
   update(profileId: number, data: EditProfile): Promise<void>;
   exportProfile(profileId: number): Promise<void>;
   importProfile(): Promise<void>;
-};
+}

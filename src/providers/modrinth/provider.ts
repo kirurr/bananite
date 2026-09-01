@@ -12,10 +12,10 @@ import { join } from 'path';
 function getModSlugFromLink(link: string): string {
   const regex = /\/mods?\/([a-z0-9-]+)/i;
 
-  const match = regex.exec(link);
-  if (!match) throw new Error(`Invalid mod link: ${link}`);
+  const slug = regex.exec(link)?.[1];
+  if (!slug) throw new Error(`Invalid mod link: ${link}`);
 
-  return match[1];
+  return slug;
 }
 
 @injectable()

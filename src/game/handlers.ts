@@ -3,6 +3,7 @@ import { container } from '../container';
 import { TYPES } from '../types';
 import type { IGameService } from './service';
 import { channel } from './ipc';
+import type { NewGameSettings } from './schema';
 
 export function registerGameIpcHandlers(): void {
   const service = container.get<IGameService>(TYPES.GameService);
@@ -11,5 +12,5 @@ export function registerGameIpcHandlers(): void {
   ipcMain.handle(channel.LoaderList, () => service.getLoaders());
   ipcMain.handle(channel.SyncData, () => service.syncData());
   ipcMain.handle(channel.GameSettings, () => service.getSettings());
-  ipcMain.handle(channel.SetGameSettings, (_, data) => service.setSettings(data));
+  ipcMain.handle(channel.SetGameSettings, (_, data: NewGameSettings) => service.setSettings(data));
 }

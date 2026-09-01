@@ -7,8 +7,8 @@ export const channel = {
   DownloadMod: 'mods:download-mod',
 } as const;
 
-export type Api = {
+export interface Api {
   addByLink(link: string): Promise<Mod>;
   list(): Promise<FilledMod[]>;
   downloadMod(mod: FilledMod, gameVersion: GameVersion, loader: Loader): Promise<void>;
-};
+}

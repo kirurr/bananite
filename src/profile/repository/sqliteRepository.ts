@@ -13,6 +13,7 @@ import { and, eq } from 'drizzle-orm';
 import type { IModRepository } from '../../mod/repository/interface';
 import { TYPES } from '../../types';
 import type { FilledMod } from '../../mod/schema';
+import { firstOrThrow } from '../../shared/array';
 
 @injectable()
 export class SQLiteProfileRepository implements IProfileRepository {
@@ -20,14 +21,13 @@ export class SQLiteProfileRepository implements IProfileRepository {
 
   constructor(@inject(TYPES.ModRepository) private readonly modsRepo: IModRepository) {}
   async create(profile: NewProfile): Promise<Profile> {
-    const [row] = await this.db.insert(profiles).values(profile).returning();
-    return row;
+    const rows = await this.db.insert(profiles).values(profile).returning();
+    return firstOrThrow(rows, 'insert into profiles returned no rows');
   }
 
   async getActive(): Promise<ProfileWithMods | null> {
-    const rows = await this.db.select().from(profiles).where(eq(profiles.isActive, true));
-    if (rows.length === 0) return null;
-    const profile = rows[0];
+    const [profile] = await this.db.select().from(profiles).where(eq(profiles.isActive, true));
+    if (!profile) return null;
     const mods = await this.modsRepo.list(profile.id);
 
     return {
@@ -37,9 +37,8 @@ export class SQLiteProfileRepository implements IProfileRepository {
   }
 
   async get(id: number): Promise<ProfileWithMods | null> {
-    const rows = await this.db.select().from(profiles).where(eq(profiles.id, id));
-    if (rows.length === 0) return null;
-    const profile = rows[0];
+    const [profile] = await this.db.select().from(profiles).where(eq(profiles.id, id));
+    if (!profile) return null;
     const mods = await this.modsRepo.list(profile.id);
 
     return {

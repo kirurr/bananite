@@ -129,34 +129,30 @@ export class ProfileService implements IProfileService {
   private async setActive(profile: ProfileWithMods): Promise<void> {
     const linker = getLinker();
     await Promise.all(
-      profile.mods
-        .map((mod) => {
-          const modVersion = this.findModVersion(mod, profile);
-          if (!modVersion) {
-            console.error(`failed to link mod: ${mod.rawName} - Mod version not found`);
-            return null;
-          }
+      profile.mods.flatMap((mod) => {
+        const modVersion = this.findModVersion(mod, profile);
+        if (!modVersion) {
+          console.error(`failed to link mod: ${mod.rawName} - Mod version not found`);
+          return [];
+        }
 
-          return linker.createLink(modVersion.fileName);
-        })
-        .filter(Boolean),
+        return [linker.createLink(modVersion.fileName)];
+      }),
     );
   }
 
   private async setInactive(profile: ProfileWithMods): Promise<void> {
     const linker = getLinker();
     await Promise.all(
-      profile.mods
-        .map((mod) => {
-          const modVersion = this.findModVersion(mod, profile);
-          if (!modVersion) {
-            console.error(`failed to unlink mod: ${mod.rawName} - Mod version not found`);
-            return null;
-          }
+      profile.mods.flatMap((mod) => {
+        const modVersion = this.findModVersion(mod, profile);
+        if (!modVersion) {
+          console.error(`failed to unlink mod: ${mod.rawName} - Mod version not found`);
+          return [];
+        }
 
-          return linker.deleteLink(modVersion.fileName);
-        })
-        .filter(Boolean),
+        return [linker.deleteLink(modVersion.fileName)];
+      }),
     );
   }
 

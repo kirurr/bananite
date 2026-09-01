@@ -8,10 +8,10 @@ export const channel = {
   SetGameSettings: 'game:set-settings',
 } as const;
 
-export type Api = {
+export interface Api {
   listVersions(): Promise<GameVersion[]>;
   listLoaders(): Promise<Loader[]>;
   syncData(): Promise<void>;
   getSettings(): Promise<GameSettings>;
   setSettings(data: NewGameSettings): Promise<void>;
-};
+}

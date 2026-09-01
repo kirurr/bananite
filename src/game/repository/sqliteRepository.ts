@@ -18,10 +18,9 @@ export class SQLiteGameRepository implements IGameRepository {
   private readonly db: DB = getDb();
 
   async getGameSettings(): Promise<GameSettings | null> {
-    const res = await this.db.select().from(gameSettings);
+    const [row] = await this.db.select().from(gameSettings);
 
-    if (res.length === 0) return null;
-    return res[0];
+    return row ?? null;
   }
 
   async setGameSettings(data: NewGameSettings): Promise<void> {

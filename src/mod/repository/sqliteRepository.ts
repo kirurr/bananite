@@ -14,6 +14,7 @@ import {
   type FilledMod,
 } from '../schema';
 import type { IModInfoRepository, IModRepository, IModVersionRepository } from './interface';
+import { firstOrThrow } from '../../shared/array';
 import { profileMods } from '../../profile/schema';
 
 @injectable()
@@ -44,8 +45,6 @@ export class SQLiteModRepository implements IModRepository {
     return [...byId.values()][0];
   }
 
-  async list(): Promise<FilledMod[]>;
-  async list(profileId: number): Promise<FilledMod[]>;
   async list(profileId?: number): Promise<FilledMod[]> {
     const baseQuery = this.db
       .select()
@@ -85,7 +84,7 @@ export class SQLiteModRepository implements IModRepository {
 
   async add(mod: NewMod): Promise<Mod> {
     const data = await this.db.insert(mods).values(mod).returning();
-    return data[0];
+    return firstOrThrow(data, 'insert into mods returned no rows');
   }
 
   async delete(id: string): Promise<void> {
@@ -108,7 +107,7 @@ export class SQLiteModInfoRepository implements IModInfoRepository {
 
   async add(modInfo: NewModInfo): Promise<ModInfo> {
     const data = await this.db.insert(modInfos).values(modInfo).returning();
-    return data[0];
+    return firstOrThrow(data, 'insert into modInfos returned no rows');
   }
 }
 
@@ -127,6 +126,6 @@ export class SQLiteModVersionRepository implements IModVersionRepository {
 
   async add(modVersion: NewModVersion): Promise<ModVersion> {
     const data = await this.db.insert(modVersions).values(modVersion).returning();
-    return data[0];
+    return firstOrThrow(data, 'insert into modVersions returned no rows');
   }
 }

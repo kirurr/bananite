@@ -4,24 +4,28 @@ import { container } from '../container';
 import { TYPES } from '../types';
 import type { IProfileService } from './service';
 import { channel } from './ipc';
+import type { EditProfile, NewProfile } from './schema';
 
 export function registerProfileIpcHandlers(): void {
   const service = container.get<IProfileService>(TYPES.ProfileService);
 
-  ipcMain.handle(channel.CreateProfile, (_, profile) => service.create(profile));
-  ipcMain.handle(channel.GetProfile, (_, id) => service.get(id));
+  ipcMain.handle(channel.CreateProfile, (_, profile: NewProfile) => service.create(profile));
+  ipcMain.handle(channel.GetProfile, (_, id: number) => service.get(id));
   ipcMain.handle(channel.ListProfiles, () => service.list());
-  ipcMain.handle(channel.AddModToProfile, (_, profileId, modId) =>
+  ipcMain.handle(channel.AddModToProfile, (_, profileId: number, modId: string) =>
     service.addMod(profileId, modId),
   );
-  ipcMain.handle(channel.RemoveModFromProfile, (_, profileId, modId) =>
+  ipcMain.handle(channel.RemoveModFromProfile, (_, profileId: number, modId: string) =>
     service.removeMod(profileId, modId),
   );
-  ipcMain.handle(channel.UpdateProfile, (_, profileId, data) => service.update(profileId, data));
+  ipcMain.handle(channel.UpdateProfile, (_, profileId: number, data: EditProfile) =>
+    service.update(profileId, data),
+  );
 
-  ipcMain.handle(channel.ExportProfile, async (_, profileId) => {
+  ipcMain.handle(channel.ExportProfile, async (_, profileId: number) => {
     const json = await service.getProfileJSON(profileId);
-    const { name } = JSON.parse(json).profile as { name: string };
+    const { profile } = JSON.parse(json) as { profile: { name: string } };
+    const { name } = profile;
 
     const result = await dialog.showSaveDialog({
       defaultPath: `${name}.json`,
@@ -38,8 +42,9 @@ export function registerProfileIpcHandlers(): void {
       filters: [{ name: 'JSON', extensions: ['json'] }],
     });
 
-    if (result.canceled || result.filePaths.length === 0) return;
-    const contents = await readFile(result.filePaths[0], 'utf-8');
+    const [filePath] = result.filePaths;
+    if (result.canceled || !filePath) return;
+    const contents = await readFile(filePath, 'utf-8');
     await service.createProfileByJSON(contents);
   });
 }
