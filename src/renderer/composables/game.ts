@@ -4,9 +4,18 @@ import type { GameSettings, GameVersion, Loader, NewGameSettings } from '../../g
 const versions = ref<GameVersion[]>([]);
 const loaders = ref<Loader[]>([]);
 const settings = ref<GameSettings | null>(null);
-void getVersions();
-void getLoaders();
+void getVersions().then(() => {
+  if (versions.value.length === 0) {
+    void syncData();
+  }
+});
+void getLoaders().then(() => {
+  if (loaders.value.length === 0) {
+    void syncData();
+  }
+});
 void getSettings();
+
 async function getSettings() {
   const result = await window.api.game.getSettings();
   settings.value = result;
@@ -21,9 +30,6 @@ async function getLoaders() {
   const result = await window.api.game.listLoaders();
   loaders.value = result;
 }
-
-// Первичная загрузка при создании композабла: ждать здесь нельзя (setup
-// синхронный), поэтому промис отпускаем осознанно через `void`.
 
 async function setSettings(data: NewGameSettings) {
   await window.api.game.setSettings(data);
