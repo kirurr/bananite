@@ -64,6 +64,13 @@
       "when": 1783201821325,
       "tag": "0008_overrated_nebula",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "6",
+      "when": 1788371949382,
+      "tag": "0009_parallel_northstar",
+      "breakpoints": true
     }
   ]
 }

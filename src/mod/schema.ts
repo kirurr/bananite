@@ -1,5 +1,6 @@
 import { integer, sqliteTable, text } from 'drizzle-orm/sqlite-core';
 import { providers } from '../providers/providers';
+import { sql } from 'drizzle-orm';
 
 export const mods = sqliteTable('mods', {
   id: text('id').primaryKey().notNull(),
@@ -7,6 +8,9 @@ export const mods = sqliteTable('mods', {
   slug: text('slug').notNull(),
   url: text('url').notNull(),
   provider: text('provider', { enum: providers }).notNull(),
+  createdAt: integer('created_at', { mode: 'timestamp' })
+    .notNull()
+    .default(sql`(unixepoch())`),
 });
 
 export type Mod = typeof mods.$inferSelect;
@@ -45,7 +49,7 @@ export const modInfos = sqliteTable('mod_infos', {
 export type ModInfo = typeof modInfos.$inferSelect;
 export type NewModInfo = typeof modInfos.$inferInsert;
 
-export type FilledMod = Mod & {
+export type FilledMod = NewMod & {
   info: ModInfo | null;
   versions: ModVersion[];
 };

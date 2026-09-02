@@ -51,14 +51,13 @@ export class SQLiteModRepository implements IModRepository {
       .from(mods)
       .leftJoin(modInfos, eq(mods.id, modInfos.modId))
       .leftJoin(modVersions, eq(mods.id, modVersions.modId));
-
     const query = profileId
       ? baseQuery
           .innerJoin(profileMods, eq(mods.id, profileMods.modId))
           .where(eq(profileMods.profileId, profileId))
       : baseQuery;
 
-    const rows = await query.orderBy(mods.id, desc(modVersions.date));
+    const rows = await query.orderBy(desc(mods.createdAt));
 
     const byId = new Map<string, FilledMod>();
 

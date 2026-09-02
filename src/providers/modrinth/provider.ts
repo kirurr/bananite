@@ -10,11 +10,9 @@ import type { ISystemService } from '../../system/service';
 import { join } from 'path';
 
 function getModSlugFromLink(link: string): string {
-  const regex = /\/mods?\/([a-z0-9-]+)/i;
-
+  const regex = /\/mods?\/([^/?#]+)/i;
   const slug = regex.exec(link)?.[1];
   if (!slug) throw new Error(`Invalid mod link: ${link}`);
-
   return slug;
 }
 
