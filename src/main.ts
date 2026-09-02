@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { app, BrowserWindow, dialog, ipcMain, type OpenDialogOptions } from 'electron';
+import { app, BrowserWindow, dialog, ipcMain, shell, type OpenDialogOptions } from 'electron';
 import path from 'node:path';
 import started from 'electron-squirrel-startup';
 import { registerIpcHandlers } from './main/ipc';
@@ -75,4 +75,8 @@ ipcMain.handle(IpcChannel.OpenDialog, async (_event, options: OpenDialogOptions 
 
   if (result.canceled) return null;
   return result.filePaths[0];
+});
+
+ipcMain.handle(IpcChannel.OpenExternalLink, async (_event, url: string) => {
+  await shell.openExternal(url);
 });

@@ -1,6 +1,6 @@
 import { contextBridge, ipcRenderer } from 'electron';
 import { IpcChannel, type Api } from './shared/ipc';
-import { sharedHandler } from './shared/handler';
+import { systemHandler } from './shared/handler';
 
 const api: Api = {
   game: {
@@ -27,7 +27,9 @@ const api: Api = {
     exportProfile: (profileId) => ipcRenderer.invoke(IpcChannel.ExportProfile, profileId),
     importProfile: () => ipcRenderer.invoke(IpcChannel.ImportProfile),
   },
-  ...sharedHandler,
+  system: {
+    ...systemHandler,
+  },
 };
 
 contextBridge.exposeInMainWorld('api', api);

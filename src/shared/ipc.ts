@@ -3,6 +3,16 @@ import { type Api as GameApi, channel as GameChannel } from '../game/ipc';
 import { type Api as ProfileApi, channel as ProfileChannel } from '../profile/ipc';
 import type { OpenDialogOptions } from 'electron';
 
+export const SystemChannel = {
+  OpenDialog: 'system:open-dialog',
+  OpenExternalLink: 'system:open-external-link',
+};
+
+export interface SystemApi {
+  openDialog: (options: OpenDialogOptions) => Promise<string | undefined>;
+  openExternalLink: (url: string) => Promise<void>;
+}
+
 /**
  * Shared IPC contract between the main and renderer processes.
  *
@@ -16,7 +26,7 @@ export const IpcChannel = {
   ...ModsChannel,
   ...GameChannel,
   ...ProfileChannel,
-  OpenDialog: 'shared:open-dialog',
+  ...SystemChannel,
 };
 
 /**
@@ -27,5 +37,5 @@ export interface Api {
   mods: ModsApi;
   game: GameApi;
   profile: ProfileApi;
-  openDialog: (options: OpenDialogOptions) => Promise<string | undefined>;
+  system: SystemApi;
 }
