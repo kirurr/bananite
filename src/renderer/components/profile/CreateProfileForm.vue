@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import type { GameVersion, Loader } from '../../game/schema';
-import type { NewProfile } from '../../profile/schema';
+import type { Loader, GameVersion } from '../../../game/schema';
+import type { NewProfile } from '../../../profile/schema';
 
 const props = defineProps<{
   loaders: Loader[];
@@ -13,8 +13,11 @@ const name = ref<string>();
 const gameVersion = ref<string>();
 const loader = ref<string>();
 
-function handleSubmit() {
-  if (!name.value || !gameVersion.value || !loader.value) return console.error('Fields not set');
+async function handleSubmit() {
+  if (!name.value || !gameVersion.value || !loader.value) {
+    console.error('Fields not set');
+    return;
+  }
 
   const profile: NewProfile = {
     name: name.value,
@@ -22,7 +25,7 @@ function handleSubmit() {
     loader: loader.value,
   };
 
-  props.handleCreate(profile);
+  await props.handleCreate(profile);
 }
 </script>
 

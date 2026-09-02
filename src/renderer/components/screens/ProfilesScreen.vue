@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { useGame } from '../composables/game';
-import { useMods } from '../composables/mod';
-import { useProfiles } from '../composables/profiles';
-import CreateProfileForm from './CreateProfileForm.vue';
-import ProfileLi from './ProfileLi.vue';
+import { useGame } from '../../composables/game';
+import { useMods } from '../../composables/mod';
+import { useProfiles } from '../../composables/profiles';
+import CreateProfileForm from '../profile/CreateProfileForm.vue';
+import ProfileLi from '../profile/ProfileLi.vue';
 
 const { loaders, versions } = useGame();
 const { mods } = useMods();

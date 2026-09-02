@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
-import type { ProfileWithMods } from '../../profile/schema';
-import type { FilledMod } from '../../mod/schema';
-import Button from './volt/Button.vue';
+import type { FilledMod } from '../../../mod/schema';
+import type { ProfileWithMods } from '../../../profile/schema';
+import Button from '../volt/Button.vue';
+import Select from '../volt/Select.vue';
 
 const props = defineProps<{
   profile: ProfileWithMods;
@@ -23,10 +24,13 @@ const filteredMods = computed(() => {
 
 const selectedModId = ref<string | undefined>(undefined);
 
-function handleSubmit() {
-  if (!selectedModId.value) return console.error('Mod not selected');
+async function handleSubmit() {
+  if (!selectedModId.value) {
+    console.error('Mod not selected');
+    return;
+  }
 
-  props.handleAddModToProfile(props.profile.id, selectedModId.value);
+  await props.handleAddModToProfile(props.profile.id, selectedModId.value);
 }
 </script>
 <template>
@@ -42,22 +46,24 @@ function handleSubmit() {
       </ul>
       <div>
         <form @submit.prevent="handleSubmit">
-          <select v-model="selectedModId" placeholder="Select mod">
-            <option :value="undefined">No mod selected</option>
-            <option v-for="mod in filteredMods" :key="mod.id" :value="mod.id">
-              {{ mod.rawName }}
-            </option>
-          </select>
-          <button type="submit">Add</button>
+          <Select
+            v-model="selectedModId"
+            :options="filteredMods"
+            option-label="rawName"
+            option-value="id"
+            placeholder="Select mod"
+            show-clear
+          />
+          <Button type="submit" label="Add" />
         </form>
       </div>
       <template v-if="profile.isActive">
-        <button @click="setInactive">Set inactive</button>
+        <Button label="Set inactive" @click="setInactive" />
       </template>
       <template v-else>
-        <button @click="setActive">Set active</button>
+        <Button label="Set active" @click="setActive" />
       </template>
-      <button @click="exportProfile(profile.id)">Export</button>
+      <Button label="Export" @click="exportProfile(profile.id)" />
     </div>
   </li>
 </template>
