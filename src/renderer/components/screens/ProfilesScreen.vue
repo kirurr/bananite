@@ -6,6 +6,7 @@ import CreateProfileForm from '../profile/CreateProfileForm.vue';
 import ProfileAccordionPanel from '../profile/ProfileAccordionPanel.vue';
 import Button from '../volt/Button.vue';
 import Accordion from '../volt/Accordion.vue';
+import { computed } from 'vue';
 
 const { loaders, versions } = useGame();
 const { mods } = useMods();
@@ -20,6 +21,8 @@ const {
   exportProfile,
   importProfile,
 } = useProfiles();
+
+const activeProfileId = computed(() => profiles.value.find((p) => p.isActive)?.id);
 </script>
 
 <template>
@@ -31,7 +34,7 @@ const {
     />
     <Button @click="importProfile">Import profile</Button>
   </div>
-  <Accordion value="0">
+  <Accordion :value="['0']" multiple>
     <ProfileAccordionPanel
       v-for="profile in profiles"
       :key="profile.id"
@@ -43,6 +46,7 @@ const {
       :set-active="() => setActive(profile.id)"
       :set-inactive="() => setInactive(profile.id)"
       :export-profile="exportProfile"
+      :active-profile-id="activeProfileId"
     />
   </Accordion>
 </template>
