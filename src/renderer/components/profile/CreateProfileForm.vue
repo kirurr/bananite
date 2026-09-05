@@ -5,6 +5,8 @@ import type { NewProfile } from '../../../profile/schema';
 import InputText from '../volt/InputText.vue';
 import Select from '../volt/Select.vue';
 import Button from '../volt/Button.vue';
+import { useToast } from 'primevue/usetoast';
+import { TOAST_TIMEOUT_MS } from '../../composables/toast';
 
 const props = defineProps<{
   loaders: Loader[];
@@ -16,9 +18,17 @@ const name = ref<string>();
 const gameVersion = ref<string>();
 const loader = ref<string>();
 
+const toast = useToast();
+
 async function handleSubmit() {
   if (!name.value || !gameVersion.value || !loader.value) {
     console.error('Fields not set');
+    toast.add({
+      severity: 'error',
+      summary: 'Error',
+      detail: 'Fields not set',
+      life: TOAST_TIMEOUT_MS,
+    });
     return;
   }
 
