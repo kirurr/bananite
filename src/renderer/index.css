@@ -11,36 +11,36 @@ body {
 
 /* Primary and Surface Palettes */
 :root {
-  --p-primary-50: #ecfdf5;
-  --p-primary-100: #d1fae5;
-  --p-primary-200: #a7f3d0;
-  --p-primary-300: #6ee7b7;
-  --p-primary-400: #34d399;
-  --p-primary-500: #10b981;
-  --p-primary-600: #059669;
-  --p-primary-700: #047857;
-  --p-primary-800: #065f46;
-  --p-primary-900: #064e3b;
-  --p-primary-950: #022c22;
+  --p-primary-50: #fffdea;
+  --p-primary-100: #fff8c2;
+  --p-primary-200: #ffef85;
+  --p-primary-300: #ffe14f;
+  --p-primary-400: #ffd21f;
+  --p-primary-500: #f7c000;
+  --p-primary-600: #d49b00;
+  --p-primary-700: #a87400;
+  --p-primary-800: #875a08;
+  --p-primary-900: #6f490f;
+  --p-primary-950: #3f2803;
   --p-surface-0: #ffffff;
-  --p-surface-50: #fafafa;
-  --p-surface-100: #f4f4f5;
-  --p-surface-200: #e4e4e7;
-  --p-surface-300: #d4d4d8;
-  --p-surface-400: #a1a1aa;
-  --p-surface-500: #71717a;
-  --p-surface-600: #52525b;
-  --p-surface-700: #3f3f46;
-  --p-surface-800: #27272a;
-  --p-surface-900: #18181b;
-  --p-surface-950: #09090b;
+  --p-surface-50: #faf8f2;
+  --p-surface-100: #f2efe4;
+  --p-surface-200: #e5e0cf;
+  --p-surface-300: #cfc8b2;
+  --p-surface-400: #a19a83;
+  --p-surface-500: #78715f;
+  --p-surface-600: #5a5447;
+  --p-surface-700: #433f35;
+  --p-surface-800: #2a2721;
+  --p-surface-900: #1b1914;
+  --p-surface-950: #0e0d0a;
   --p-content-border-radius: 6px;
 }
 
 /* Light */
 :root {
   --p-primary-color: var(--p-primary-500);
-  --p-primary-contrast-color: var(--p-surface-0);
+  --p-primary-contrast-color: var(--p-surface-950);
   --p-primary-hover-color: var(--p-primary-600);
   --p-primary-active-color: var(--p-primary-700);
   --p-content-border-color: var(--p-surface-200);
@@ -67,7 +67,7 @@ body {
 @media (prefers-color-scheme: dark) {
   :root {
     --p-primary-color: var(--p-primary-400);
-    --p-primary-contrast-color: var(--p-surface-900);
+    --p-primary-contrast-color: var(--p-surface-950);
     --p-primary-hover-color: var(--p-primary-300);
     --p-primary-active-color: var(--p-primary-200);
     --p-content-border-color: var(--p-surface-700);
