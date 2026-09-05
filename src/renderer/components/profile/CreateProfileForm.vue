@@ -37,6 +37,7 @@ async function handleSubmit() {
     <InputText v-model="name" placeholder="Name" />
     <Select
       v-model="gameVersion"
+      filter
       placeholder="Game version"
       :options="gameVersions"
       option-label="version"
@@ -44,6 +45,7 @@ async function handleSubmit() {
     />
     <Select
       v-model="loader"
+      filter
       placeholder="Loader"
       :options="loaders"
       option-label="name"

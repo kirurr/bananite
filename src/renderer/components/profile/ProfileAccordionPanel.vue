@@ -18,6 +18,7 @@ const props = defineProps<{
   setInactive: () => Promise<void>;
   exportProfile: (profileId: number) => Promise<void>;
   accordionValue: string;
+  activeProfileId: number | undefined;
 }>();
 
 const filteredMods = computed(() => {
@@ -45,10 +46,14 @@ async function handleSubmit() {
       <div class="flex flex-row items-center gap-4">
         <span>{{ profile.name }} - {{ profile.gameVersion }} - {{ profile.loader }}</span>
         <template v-if="profile.isActive">
-          <Button label="Set inactive" @click="setInactive" />
+          <Button label="Set inactive" @click.stop="setInactive" />
         </template>
         <template v-else>
-          <Button label="Set active" @click="setActive" />
+          <Button
+            label="Set active"
+            :disabled="props.activeProfileId !== undefined"
+            @click.stop="setActive"
+          />
         </template>
         <Button label="Export" @click="exportProfile(profile.id)" />
       </div>
@@ -58,6 +63,7 @@ async function handleSubmit() {
         <form class="flex flex-row items-center gap-4" @submit.prevent="handleSubmit">
           <Select
             v-model="selectedModId"
+            filter
             :options="filteredMods"
             option-label="rawName"
             option-value="id"
