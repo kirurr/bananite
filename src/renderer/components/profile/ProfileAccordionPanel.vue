@@ -12,11 +12,11 @@ import ProfileModsDataTable from './ProfileModsDataTable.vue';
 const props = defineProps<{
   profile: ProfileWithMods;
   mods: FilledMod[];
-  handleAddModToProfile: (profileId: number, modId: string) => Promise<void>;
-  handleRemoveModFromProfile: (profileId: number, modId: string) => Promise<void>;
+  handleAddModToProfile: (modId: string) => Promise<void>;
+  handleRemoveModFromProfile: (modId: string) => Promise<void>;
   setActive: () => Promise<void>;
   setInactive: () => Promise<void>;
-  exportProfile: (profileId: number) => Promise<void>;
+  exportProfile: () => Promise<void>;
   accordionValue: string;
   activeProfileId: number | undefined;
 }>();
@@ -36,7 +36,7 @@ async function handleSubmit() {
     return;
   }
 
-  await props.handleAddModToProfile(props.profile.id, selectedModId.value);
+  await props.handleAddModToProfile(selectedModId.value);
   selectedModId.value = undefined;
 }
 </script>
@@ -55,7 +55,7 @@ async function handleSubmit() {
             @click.stop="setActive"
           />
         </template>
-        <Button label="Export" @click="exportProfile(profile.id)" />
+        <Button label="Export" @click="exportProfile" />
       </div>
     </AccordionHeader>
     <AccordionContent>
@@ -74,9 +74,7 @@ async function handleSubmit() {
         </form>
         <ProfileModsDataTable
           :mods="profile.mods"
-          :handle-remove-mod-from-profile="
-            (modId: string) => handleRemoveModFromProfile(profile.id, modId)
-          "
+          :handle-remove-mod-from-profile="(modId: string) => handleRemoveModFromProfile(modId)"
         />
       </div>
     </AccordionContent>

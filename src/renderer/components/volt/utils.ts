@@ -1,4 +1,3 @@
-// @ts-nocheck -- вендорный код Volt/PrimeVue, из typecheck исключён (см. tsconfig.json)
 import { twMerge } from 'tailwind-merge';
 import { mergeProps } from 'vue';
 

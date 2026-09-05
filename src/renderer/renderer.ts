@@ -30,6 +30,7 @@ import './index.css';
 import { createApp } from 'vue';
 import App from './App.vue';
 import PrimeVue from 'primevue/config';
+import ToastService from 'primevue/toastservice';
 
 // typescript-eslint не умеет типизировать SFC (это работа Volar/vue-tsc),
 // поэтому App.vue для него — `error typed`. Реальную проверку даёт `npm run typecheck`.
@@ -38,4 +39,5 @@ const app = createApp(App);
 app.use(PrimeVue, {
   unstyled: true,
 });
+app.use(ToastService);
 app.mount('#app');
