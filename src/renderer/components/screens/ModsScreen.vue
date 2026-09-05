@@ -4,14 +4,29 @@ import { useMods } from '../../composables/mod';
 import InputText from '../volt/InputText.vue';
 import Button from '../volt/Button.vue';
 import ModCard from '../mods/ModCard.vue';
+import { handleErrorToast, TOAST_TIMEOUT_MS } from '../../composables/toast';
+import { useToast } from 'primevue/usetoast';
 
 const { mods, addModByLink } = useMods();
 
 const input = ref('');
 
+const toast = useToast();
+
 async function handleAddByLink() {
-  await addModByLink(input.value);
-  input.value = '';
+  try {
+    await addModByLink(input.value);
+    toast.add({
+      severity: 'success',
+      summary: 'Success',
+      detail: 'Mod added',
+      life: TOAST_TIMEOUT_MS,
+    });
+  } catch (e) {
+    handleErrorToast(toast, e);
+  } finally {
+    input.value = '';
+  }
 }
 </script>
 
