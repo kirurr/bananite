@@ -57,37 +57,3 @@ jobs:
         run: npm run publish
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Build portable single-file exe
-        shell: pwsh
-        env:
-          SEVENZIP_EXTRA_URL: https://github.com/ip7z/7zip/releases/download/25.01/7z2501-extra.7z
-        run: |
-          $ErrorActionPreference = 'Stop'
-
-          $packaged = Get-ChildItem out -Directory -Filter '*-win32-x64' | Select-Object -First 1
-          if (-not $packaged) { throw 'forge make produced no out\*-win32-x64 folder' }
-
-          $exeName = (Get-ChildItem $packaged.FullName -Filter '*.exe' | Select-Object -First 1).Name
-          $portable = "out\$($packaged.Name)-portable.exe"
-
-          Invoke-WebRequest -Uri $env:SEVENZIP_EXTRA_URL -OutFile 7z-extra.7z
-          7z e 7z-extra.7z 7zSD.sfx -o"$PWD" -y
-
-          7z a -t7z -mx=9 app.7z "$($packaged.FullName)\*"
-
-          $sfxConfig = ";!@Install@!UTF-8!`r`nRunProgram=`"$exeName`"`r`nGUIMode=`"2`"`r`n;!@InstallEnd@!`r`n"
-          [IO.File]::WriteAllText("$PWD\sfx-config.txt", $sfxConfig, (New-Object Text.UTF8Encoding $false))
-
-          cmd /c copy /b 7zSD.sfx + sfx-config.txt + app.7z "$portable"
-          if ($LASTEXITCODE -ne 0) { throw 'Failed to concatenate the SFX exe' }
-
-          $size = [math]::Round((Get-Item $portable).Length / 1MB, 1)
-          Write-Host "Built $portable ($size MB)"
-          "PORTABLE_PATH=$portable" | Out-File -FilePath $env:GITHUB_ENV -Append
-
-      - name: Attach portable exe to the release
-        shell: pwsh
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: gh release upload '${{ github.ref_name }}' $env:PORTABLE_PATH --clobber
