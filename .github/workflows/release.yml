@@ -72,7 +72,7 @@ jobs:
           $portable = "out\$($packaged.Name)-portable.exe"
 
           Invoke-WebRequest -Uri $env:SEVENZIP_EXTRA_URL -OutFile 7z-extra.7z
-          7z e 7z-extra.7z 7zSD.sfx -o. -y
+          7z e 7z-extra.7z 7zSD.sfx -o"$PWD" -y
 
           7z a -t7z -mx=9 app.7z "$($packaged.FullName)\*"
 
