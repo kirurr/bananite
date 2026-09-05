@@ -1,16 +1,25 @@
-import { integer, sqliteTable, text } from 'drizzle-orm/sqlite-core';
+import { integer, sqliteTable, text, uniqueIndex } from 'drizzle-orm/sqlite-core';
 import { gameVersions, loaders } from '../game/schema';
 import { mods, type FilledMod } from '../mod/schema';
 import { providers } from '../providers/providers';
 import z from 'zod';
+import { sql } from 'drizzle-orm';
 
-export const profiles = sqliteTable('profiles', {
-  id: integer('id').primaryKey({ autoIncrement: true }),
-  name: text('name').notNull(),
-  gameVersion: text('game_version').references(() => gameVersions.version),
-  loader: text('loader').references(() => loaders.name),
-  isActive: integer('is_active', { mode: 'boolean' }).default(false).unique(),
-});
+export const profiles = sqliteTable(
+  'profiles',
+  {
+    id: integer('id').primaryKey({ autoIncrement: true }),
+    name: text('name').notNull(),
+    gameVersion: text('game_version').references(() => gameVersions.version),
+    loader: text('loader').references(() => loaders.name),
+    isActive: integer('is_active', { mode: 'boolean' }).default(false),
+  },
+  (table) => [
+    uniqueIndex('only_one_active')
+      .on(table.isActive)
+      .where(sql`${table.isActive} = 1`),
+  ],
+);
 
 export type Profile = typeof profiles.$inferSelect;
 export type NewProfile = typeof profiles.$inferInsert;

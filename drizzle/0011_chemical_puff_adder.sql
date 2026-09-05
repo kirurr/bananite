@@ -1,0 +1,1 @@
+CREATE UNIQUE INDEX `only_one_active` ON `profiles` (`is_active`) WHERE "profiles"."is_active" = 1;

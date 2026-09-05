@@ -1,0 +1,1 @@
+DROP INDEX `profiles_is_active_unique`;

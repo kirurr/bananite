@@ -71,6 +71,20 @@
       "when": 1788371949382,
       "tag": "0009_parallel_northstar",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "6",
+      "when": 1788606415433,
+      "tag": "0010_strong_shadow_king",
+      "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "6",
+      "when": 1788606441075,
+      "tag": "0011_chemical_puff_adder",
+      "breakpoints": true
     }
   ]
 }
