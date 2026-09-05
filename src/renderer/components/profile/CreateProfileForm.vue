@@ -2,6 +2,9 @@
 import { ref } from 'vue';
 import type { Loader, GameVersion } from '../../../game/schema';
 import type { NewProfile } from '../../../profile/schema';
+import InputText from '../volt/InputText.vue';
+import Select from '../volt/Select.vue';
+import Button from '../volt/Button.vue';
 
 const props = defineProps<{
   loaders: Loader[];
@@ -30,18 +33,22 @@ async function handleSubmit() {
 </script>
 
 <template>
-  <form @submit.prevent="handleSubmit">
-    <input v-model="name" type="text" placeholder="Name" />
-    <select v-model="gameVersion" placeholder="Game version">
-      <option v-for="v in gameVersions" :key="v.version">
-        {{ v.version }}
-      </option>
-    </select>
-    <select v-model="loader" placeholder="Loader">
-      <option v-for="l in loaders" :key="l.name">
-        {{ l.name }}
-      </option>
-    </select>
-    <button type="submit">Create</button>
+  <form class="flex flex-row flex-wrap items-center gap-4" @submit.prevent="handleSubmit">
+    <InputText v-model="name" placeholder="Name" />
+    <Select
+      v-model="gameVersion"
+      placeholder="Game version"
+      :options="gameVersions"
+      option-label="version"
+      option-value="version"
+    />
+    <Select
+      v-model="loader"
+      placeholder="Loader"
+      :options="loaders"
+      option-label="name"
+      option-value="name"
+    />
+    <Button type="submit">Create</Button>
   </form>
 </template>

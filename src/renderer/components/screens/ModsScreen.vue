@@ -26,7 +26,7 @@ async function handleAddByLink() {
       />
       <Button @click="handleAddByLink">Add by link</Button>
     </div>
-    <div class="grid min-h-0 flex-1 grid-cols-1 content-start gap-4 overflow-y-auto">
+    <div class="grid min-h-0 flex-1 grid-cols-3 content-start gap-4 overflow-y-auto">
       <ModCard v-for="mod in mods" :key="mod.id" :mod="mod" />
     </div>
   </section>

@@ -4,6 +4,10 @@ import type { FilledMod } from '../../../mod/schema';
 import type { ProfileWithMods } from '../../../profile/schema';
 import Button from '../volt/Button.vue';
 import Select from '../volt/Select.vue';
+import AccordionPanel from '../volt/AccordionPanel.vue';
+import AccordionHeader from '../volt/AccordionHeader.vue';
+import AccordionContent from '../volt/AccordionContent.vue';
+import ProfileModsDataTable from './ProfileModsDataTable.vue';
 
 const props = defineProps<{
   profile: ProfileWithMods;
@@ -13,6 +17,7 @@ const props = defineProps<{
   setActive: () => Promise<void>;
   setInactive: () => Promise<void>;
   exportProfile: (profileId: number) => Promise<void>;
+  accordionValue: string;
 }>();
 
 const filteredMods = computed(() => {
@@ -31,21 +36,26 @@ async function handleSubmit() {
   }
 
   await props.handleAddModToProfile(props.profile.id, selectedModId.value);
+  selectedModId.value = undefined;
 }
 </script>
 <template>
-  <li>
-    <div>
-      <span>{{ profile.name }} - {{ profile.gameVersion }} - {{ profile.loader }}</span>
-      <ul>
-        <li v-if="profile.mods.length === 0">No mods</li>
-        <li v-for="mod in profile.mods" :key="mod.id">
-          {{ mod.rawName }}
-          <Button label="Remove" @click="handleRemoveModFromProfile(profile.id, mod.id)" />
-        </li>
-      </ul>
-      <div>
-        <form @submit.prevent="handleSubmit">
+  <AccordionPanel :value="props.accordionValue">
+    <AccordionHeader>
+      <div class="flex flex-row items-center gap-4">
+        <span>{{ profile.name }} - {{ profile.gameVersion }} - {{ profile.loader }}</span>
+        <template v-if="profile.isActive">
+          <Button label="Set inactive" @click="setInactive" />
+        </template>
+        <template v-else>
+          <Button label="Set active" @click="setActive" />
+        </template>
+        <Button label="Export" @click="exportProfile(profile.id)" />
+      </div>
+    </AccordionHeader>
+    <AccordionContent>
+      <div class="space-y-4">
+        <form class="flex flex-row items-center gap-4" @submit.prevent="handleSubmit">
           <Select
             v-model="selectedModId"
             :options="filteredMods"
@@ -56,14 +66,13 @@ async function handleSubmit() {
           />
           <Button type="submit" label="Add" />
         </form>
+        <ProfileModsDataTable
+          :mods="profile.mods"
+          :handle-remove-mod-from-profile="
+            (modId: string) => handleRemoveModFromProfile(profile.id, modId)
+          "
+        />
       </div>
-      <template v-if="profile.isActive">
-        <Button label="Set inactive" @click="setInactive" />
-      </template>
-      <template v-else>
-        <Button label="Set active" @click="setActive" />
-      </template>
-      <Button label="Export" @click="exportProfile(profile.id)" />
-    </div>
-  </li>
+    </AccordionContent>
+  </AccordionPanel>
 </template>
