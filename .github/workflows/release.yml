@@ -33,7 +33,11 @@ jobs:
   build:
     name: Build & publish (Windows)
     needs: check
-    runs-on: windows-latest
+    # Not windows-latest: that image ships Visual Studio 18, and the
+    # @electron/node-gyp pinned inside Forge only recognises VS 2019/2022,
+    # so rebuilding better-sqlite3 fails with "Could not find any Visual
+    # Studio installation to use". windows-2022 has a VS that it accepts.
+    runs-on: windows-2022
     steps:
       - uses: actions/checkout@v4
 
