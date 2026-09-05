@@ -14,13 +14,9 @@ function isPackagedFile(file: string): boolean {
   if (file.startsWith('/.vite')) return true;
   if (file === '/node_modules') return true;
 
-  const nativeModule = nativeModules.find(
+  return nativeModules.some(
     (name) => file === `/node_modules/${name}` || file.startsWith(`/node_modules/${name}/`),
   );
-  if (!nativeModule) return false;
-
-  const inside = file.slice(`/node_modules/${nativeModule}`.length);
-  return !inside.startsWith('/deps') && !inside.startsWith('/src');
 }
 
 const config: ForgeConfig = {

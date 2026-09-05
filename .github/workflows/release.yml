@@ -24,8 +24,6 @@ jobs:
           node-version: '24'
           cache: npm
 
-      # Native modules aren't needed for static checks, and skipping their
-      # build scripts keeps this job fast and independent of node-gyp.
       - run: npm ci --ignore-scripts
 
       - run: npm run check:ci
@@ -33,10 +31,6 @@ jobs:
   build:
     name: Build & publish (Windows)
     needs: check
-    # Not windows-latest: that image ships Visual Studio 18, and the
-    # @electron/node-gyp pinned inside Forge only recognises VS 2019/2022,
-    # so rebuilding better-sqlite3 fails with "Could not find any Visual
-    # Studio installation to use". windows-2022 has a VS that it accepts.
     runs-on: windows-2022
     steps:
       - uses: actions/checkout@v4
@@ -46,8 +40,6 @@ jobs:
           node-version: '24'
           cache: npm
 
-      # publisher-github names the release from package.json, not from the
-      # pushed tag, so a mismatch would silently publish under the wrong one.
       - name: Verify tag matches package.json version
         shell: pwsh
         run: |
@@ -66,10 +58,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      # Electron can't be a single file on its own: the exe needs the DLLs,
-      # .pak files and resources/ beside it. A 7-Zip SFX bundles the packaged
-      # folder into one exe that unpacks to %TEMP% and runs from there --
-      # the same trick electron-builder's `portable` target uses.
       - name: Build portable single-file exe
         shell: pwsh
         env:
@@ -83,13 +71,9 @@ jobs:
           $exeName = (Get-ChildItem $packaged.FullName -Filter '*.exe' | Select-Object -First 1).Name
           $portable = "out\$($packaged.Name)-portable.exe"
 
-          # 7zSD.sfx -- the SFX module that supports RunProgram -- ships only
-          # in the 7-Zip "extra" package, not in the runner's 7-Zip install.
           Invoke-WebRequest -Uri $env:SEVENZIP_EXTRA_URL -OutFile 7z-extra.7z
           7z e 7z-extra.7z 7zSD.sfx -o. -y
 
-          # Archive the folder's *contents*: RunProgram resolves relative to
-          # the extraction root, so nothing may sit in a nested directory.
           7z a -t7z -mx=9 app.7z "$($packaged.FullName)\*"
 
           $sfxConfig = ";!@Install@!UTF-8!`r`nRunProgram=`"$exeName`"`r`nGUIMode=`"2`"`r`n;!@InstallEnd@!`r`n"
@@ -102,8 +86,6 @@ jobs:
           Write-Host "Built $portable ($size MB)"
           "PORTABLE_PATH=$portable" | Out-File -FilePath $env:GITHUB_ENV -Append
 
-      # forge's publisher only uploads maker artifacts, so the portable exe
-      # goes onto the draft release it just created as a separate asset.
       - name: Attach portable exe to the release
         shell: pwsh
         env:
