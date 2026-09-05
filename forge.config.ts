@@ -8,12 +8,30 @@ import { FusesPlugin } from '@electron-forge/plugin-fuses';
 import { FuseV1Options, FuseVersion } from '@electron/fuses';
 
 const config: ForgeConfig = {
+  publishers: [
+    {
+      name: '@electron-forge/publisher-github',
+      config: {
+        repository: {
+          owner: 'kirurr',
+          name: 'bananite',
+        },
+        prerelease: false,
+        draft: true,
+      },
+    },
+  ],
   packagerConfig: {
     asar: true,
     extraResource: ['./drizzle'],
   },
   rebuildConfig: {},
-  makers: [new MakerSquirrel({}), new MakerZIP({}, ['darwin']), new MakerRpm({}), new MakerDeb({})],
+  makers: [
+    new MakerSquirrel({}),
+    new MakerZIP({}, ['darwin', 'win32']),
+    new MakerRpm({}),
+    new MakerDeb({}),
+  ],
   plugins: [
     new VitePlugin({
       // `build` can specify multiple entry builds, which can be Main process, Preload scripts, Worker process, etc.

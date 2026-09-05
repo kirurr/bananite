@@ -1,0 +1,63 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  check:
+    name: Typecheck / lint / format
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+
+      # Native modules aren't needed for static checks, and skipping their
+      # build scripts keeps this job fast and independent of node-gyp.
+      - run: npm ci --ignore-scripts
+
+      - run: npm run check:ci
+
+  build:
+    name: Build & publish (Windows)
+    needs: check
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+
+      # publisher-github names the release from package.json, not from the
+      # pushed tag, so a mismatch would silently publish under the wrong one.
+      - name: Verify tag matches package.json version
+        shell: pwsh
+        run: |
+          $pkg = (Get-Content package.json -Raw | ConvertFrom-Json).version
+          $tag = '${{ github.ref_name }}' -replace '^v', ''
+          if ($pkg -ne $tag) {
+            Write-Host "::error::Tag v$tag does not match package.json version $pkg. Bump package.json or retag."
+            exit 1
+          }
+          Write-Host "Version check ok: $pkg"
+
+      - run: npm ci
+
+      - name: Publish
+        run: npm run publish
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
