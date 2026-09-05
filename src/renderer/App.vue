@@ -5,6 +5,7 @@ import { useAppState } from './composables/appState';
 import ProfilesScreen from './components/screens/ProfilesScreen.vue';
 import ModsScreen from './components/screens/ModsScreen.vue';
 import SettingsScreen from './components/screens/SettingsScreen.vue';
+import Toast from './components/volt/Toast.vue';
 
 const { currentScreen } = useAppState();
 </script>
@@ -24,4 +25,5 @@ const { currentScreen } = useAppState();
       </template>
     </main>
   </AppShell>
+  <Toast />
 </template>
