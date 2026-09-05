@@ -13,6 +13,7 @@
 </template>
 
 <script setup lang="ts">
+// @ts-nocheck -- вендорный код Volt/PrimeVue, из typecheck исключён (см. tsconfig.json)
 import Button, { type ButtonPassThroughOptions, type ButtonProps } from 'primevue/button';
 import { ref } from 'vue';
 import { ptViewMerge } from './utils';

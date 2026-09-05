@@ -28,6 +28,7 @@
 </template>
 
 <script setup lang="ts">
+// @ts-nocheck -- вендорный код Volt/PrimeVue, из typecheck исключён (см. tsconfig.json)
 import ChevronDownIcon from '@primevue/icons/chevrondown';
 import SearchIcon from '@primevue/icons/search';
 import SpinnerIcon from '@primevue/icons/spinner';

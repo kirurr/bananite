@@ -41,5 +41,11 @@
   },
 
   "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.vue", "*.ts", "*.d.ts"],
-  "exclude": ["node_modules", ".vite", "out", "dist"]
+
+  /* Внимание: exclude убирает файлы только из корневого списка программы.
+     Компоненты Volt импортируются нашими экранами, поэтому TS всё равно
+     затягивает их транзитивно — реальное исключение из typecheck делает
+     `// @ts-nocheck` в шапке каждого файла src/renderer/components/volt/*.
+     Для eslint и prettier исключения живут в eslint.config.mjs и .prettierignore. */
+  "exclude": ["node_modules", ".vite", "out", "dist", "./src/renderer/components/volt"]
 }

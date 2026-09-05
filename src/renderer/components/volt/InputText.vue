@@ -9,6 +9,7 @@
 </template>
 
 <script setup lang="ts">
+// @ts-nocheck -- вендорный код Volt/PrimeVue, из typecheck исключён (см. tsconfig.json)
 import InputText, { type InputTextPassThroughOptions, type InputTextProps } from 'primevue/inputtext';
 import { ref } from 'vue';
 import { ptViewMerge } from './utils';
