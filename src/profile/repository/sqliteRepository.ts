@@ -26,24 +26,31 @@ export class SQLiteProfileRepository implements IProfileRepository {
   }
 
   async getActive(): Promise<ProfileWithMods | null> {
-    const [profile] = await this.db.select().from(profiles).where(eq(profiles.isActive, true));
-    if (!profile) return null;
-    const mods = await this.modsRepo.list(profile.id);
+    const [activeProfile] = await this.db
+      .select({ id: profiles.id })
+      .from(profiles)
+      .where(eq(profiles.isActive, true));
+    if (!activeProfile) return null;
 
-    return {
-      ...profile,
-      mods,
-    };
+    return await this.get(activeProfile.id);
   }
 
   async get(id: number): Promise<ProfileWithMods | null> {
     const [profile] = await this.db.select().from(profiles).where(eq(profiles.id, id));
     if (!profile) return null;
+    const pMods = await this.db
+      .select()
+      .from(profileMods)
+      .where(eq(profileMods.profileId, profile.id));
     const mods = await this.modsRepo.list(profile.id);
 
     return {
       ...profile,
-      mods,
+      mods: mods.map((mod) => {
+        const profileMod = pMods.find((pm) => pm.modId === mod.id);
+        if (!profileMod) throw new Error('Mod version not found');
+        return { ...mod, selectedVersionId: profileMod.modVersionId };
+      }),
     };
   }
 
@@ -56,14 +63,16 @@ export class SQLiteProfileRepository implements IProfileRepository {
 
     const modsById = new Map(modsRows.map((m) => [m.id, m]));
 
-    const modsByProfile = new Map<number, FilledMod[]>();
+    const modsByProfile = new Map<number, (FilledMod & { selectedVersionId: string })[]>();
 
     for (const pm of profileModsRows) {
       const mod = modsById.get(pm.modId);
       if (!mod) continue;
 
+      const modVersion = mod.versions.find((v) => v.id === pm.modVersionId);
+      if (!modVersion) throw new Error('Mod version not found');
       const arr = modsByProfile.get(pm.profileId) ?? [];
-      arr.push(mod);
+      arr.push({ ...mod, selectedVersionId: pm.modVersionId });
       modsByProfile.set(pm.profileId, arr);
     }
 
@@ -73,8 +82,8 @@ export class SQLiteProfileRepository implements IProfileRepository {
     }));
   }
 
-  async addMod(profileId: number, modId: string): Promise<void> {
-    await this.db.insert(profileMods).values({ profileId, modId });
+  async addMod(profileId: number, modId: string, modVersionId: string): Promise<void> {
+    await this.db.insert(profileMods).values({ profileId, modId, modVersionId });
   }
 
   async removeMod(profileId: number, modId: string): Promise<void> {

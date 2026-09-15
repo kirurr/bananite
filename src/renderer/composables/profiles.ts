@@ -14,8 +14,8 @@ async function createProfile(profile: NewProfile) {
   await listProfiles();
 }
 
-async function addModToProfile(profileId: number, modId: string) {
-  await window.api.profile.addMod(profileId, modId);
+async function addModToProfile(profileId: number, modId: string, modVersionId: string) {
+  await window.api.profile.addMod(profileId, modId, modVersionId);
   await listProfiles();
 }
 

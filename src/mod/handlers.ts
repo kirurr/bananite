@@ -4,8 +4,6 @@ import { TYPES } from '../types';
 import type { ProviderTypes } from '../providers/providers';
 import type { IModRepository } from './repository/interface';
 import { channel } from './ipc';
-import type { FilledMod } from './schema';
-import type { GameVersion, Loader } from '../game/schema';
 
 /** Pick the provider (the @named binding) from a mod URL. */
 function providerFromLink(link: string): ProviderTypes {
@@ -22,14 +20,6 @@ export function registerModsIpcHandlers(): void {
     const provider = getModProvider(providerFromLink(link));
     return provider.addModByLink(link);
   });
-
-  ipcMain.handle(
-    channel.DownloadMod,
-    (_event, mod: FilledMod, gameVersion: GameVersion, loader: Loader) => {
-      const provider = getModProvider(mod.provider);
-      return provider.downloadMod(mod, gameVersion, loader);
-    },
-  );
 
   ipcMain.handle(channel.ModsList, () => modRepo.list());
 }

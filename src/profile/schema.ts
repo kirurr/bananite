@@ -33,14 +33,16 @@ export const profileMods = sqliteTable('profile_mods', {
   modId: text('mod_id')
     .notNull()
     .references(() => mods.id),
+  modVersionId: text('mod_version_id').notNull(),
 });
 
 export type ProfileMod = typeof profileMods.$inferSelect;
 export type NewProfileMod = typeof profileMods.$inferInsert;
 
 export type ProfileWithMods = Profile & {
-  mods: FilledMod[];
+  mods: ProfileFilledMod[];
 };
+export type ProfileFilledMod = FilledMod & { selectedVersionId: string };
 
 export const profileJSONSchema = z.object({
   name: z.string(),
@@ -52,6 +54,7 @@ export const profileExportModSchema = z.object({
   id: z.string(),
   provider: z.enum(providers),
   url: z.url(),
+  versionId: z.string(),
 });
 
 export const profileExportSchema = z.object({

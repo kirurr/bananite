@@ -1,0 +1,1 @@
+ALTER TABLE `profile_mods` ADD `mod_version_id` text NOT NULL;

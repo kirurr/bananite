@@ -1,18 +1,18 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue';
+import { computed } from 'vue';
 import type { FilledMod } from '../../../mod/schema';
 import type { ProfileWithMods } from '../../../profile/schema';
 import Button from '../volt/Button.vue';
-import Select from '../volt/Select.vue';
 import AccordionPanel from '../volt/AccordionPanel.vue';
 import AccordionHeader from '../volt/AccordionHeader.vue';
 import AccordionContent from '../volt/AccordionContent.vue';
 import ProfileModsDataTable from './ProfileModsDataTable.vue';
+import AddModForm from './AddModForm.vue';
 
 const props = defineProps<{
   profile: ProfileWithMods;
   mods: FilledMod[];
-  handleAddModToProfile: (modId: string) => Promise<void>;
+  handleAddModToProfile: (modId: string, modVersionId: string) => Promise<void>;
   handleRemoveModFromProfile: (modId: string) => Promise<void>;
   setActive: () => Promise<void>;
   setInactive: () => Promise<void>;
@@ -28,16 +28,8 @@ const filteredMods = computed(() => {
     .filter((m) => m.versions.some((mv) => mv.loader === props.profile.loader));
 });
 
-const selectedModId = ref<string | undefined>(undefined);
-
-async function handleSubmit() {
-  if (!selectedModId.value) {
-    console.error('Mod not selected');
-    return;
-  }
-
-  await props.handleAddModToProfile(selectedModId.value);
-  selectedModId.value = undefined;
+async function handleSubmit(modId: string, modVersionId: string) {
+  await props.handleAddModToProfile(modId, modVersionId);
 }
 </script>
 <template>
@@ -60,20 +52,14 @@ async function handleSubmit() {
     </AccordionHeader>
     <AccordionContent>
       <div class="space-y-4">
-        <form class="flex flex-row items-center gap-4" @submit.prevent="handleSubmit">
-          <Select
-            v-model="selectedModId"
-            filter
-            :options="filteredMods"
-            option-label="rawName"
-            option-value="id"
-            placeholder="Select mod"
-            show-clear
-          />
-          <Button type="submit" label="Add" />
-        </form>
+        <AddModForm
+          :mods="filteredMods"
+          :game-version="profile.gameVersion!"
+          :loader="profile.loader!"
+          @submit="handleSubmit"
+        />
         <ProfileModsDataTable
-          :mods="profile.mods"
+          :profile-mods="profile.mods"
           :handle-remove-mod-from-profile="(modId: string) => handleRemoveModFromProfile(modId)"
         />
       </div>

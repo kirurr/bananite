@@ -15,7 +15,7 @@ export interface Api {
   create(profile: NewProfile): Promise<void>;
   get(id: number): Promise<Profile | null>;
   list(): Promise<ProfileWithMods[]>;
-  addMod(profileId: number, modId: string): Promise<void>;
+  addMod(profileId: number, modId: string, modVersionId: string): Promise<void>;
   removeMod(profileId: number, modId: string): Promise<void>;
   update(profileId: number, data: EditProfile): Promise<void>;
   exportProfile(profileId: number): Promise<void>;
