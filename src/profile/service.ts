@@ -54,7 +54,7 @@ export class ProfileService implements IProfileService {
 
     if (!profile.isActive) return;
 
-    const modVersion = this.findSelectedModVersion(mod, profile);
+    const modVersion = mod.versions.find((v) => v.id === modVersionId);
     if (!modVersion) {
       console.error(`failed to link mod: ${mod.rawName} - Mod version not found`);
       return;
