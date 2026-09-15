@@ -33,6 +33,7 @@ export const profileMods = sqliteTable('profile_mods', {
   modId: text('mod_id')
     .notNull()
     .references(() => mods.id),
+	modVersion: text('mod_version').notNull(),
 });
 
 export type ProfileMod = typeof profileMods.$inferSelect;
@@ -52,6 +53,7 @@ export const profileExportModSchema = z.object({
   id: z.string(),
   provider: z.enum(providers),
   url: z.url(),
+	version: z.string(),
 });
 
 export const profileExportSchema = z.object({
