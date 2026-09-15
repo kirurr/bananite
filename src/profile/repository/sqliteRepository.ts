@@ -73,8 +73,8 @@ export class SQLiteProfileRepository implements IProfileRepository {
     }));
   }
 
-  async addMod(profileId: number, modId: string): Promise<void> {
-    await this.db.insert(profileMods).values({ profileId, modId });
+  async addMod(profileId: number, modId: string, modVersion: string): Promise<void> {
+    await this.db.insert(profileMods).values({ profileId, modId, modVersion });
   }
 
   async removeMod(profileId: number, modId: string): Promise<void> {

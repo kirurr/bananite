@@ -5,7 +5,7 @@ export interface IProfileRepository {
   getActive(): Promise<ProfileWithMods | null>;
   get(id: number): Promise<ProfileWithMods | null>;
   list(): Promise<ProfileWithMods[]>;
-  addMod(profileId: number, modId: string): Promise<void>;
+  addMod(profileId: number, modId: string, modVersion: string): Promise<void>;
   removeMod(profileId: number, modId: string): Promise<void>;
   edit(id: number, profile: EditProfile): Promise<void>;
 }
