@@ -71,9 +71,9 @@ async function handleExportProfile(profileId: number) {
   }
 }
 
-async function handleAddModToProfile(profileId: number, modId: string) {
+async function handleAddModToProfile(profileId: number, modId: string, modVersionId: string) {
   try {
-    await addModToProfile(profileId, modId);
+    await addModToProfile(profileId, modId, modVersionId);
     toast.add({
       severity: 'success',
       summary: 'Success',
@@ -144,7 +144,9 @@ async function handleImportProfile() {
       :accordion-value="profile.id.toString()"
       :profile="profile"
       :mods="mods"
-      :handle-add-mod-to-profile="(modId: string) => handleAddModToProfile(profile.id, modId)"
+      :handle-add-mod-to-profile="
+        (modId, modVersionId) => handleAddModToProfile(profile.id, modId, modVersionId)
+      "
       :handle-remove-mod-from-profile="
         (modId: string) => handleRemoveModFromProfile(profile.id, modId)
       "
