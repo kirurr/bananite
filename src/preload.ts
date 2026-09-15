@@ -13,8 +13,6 @@ const api: Api = {
   mods: {
     addByLink: (link) => ipcRenderer.invoke(IpcChannel.ModsAddByLink, link),
     list: () => ipcRenderer.invoke(IpcChannel.ModsList),
-    downloadMod: (mod, gameVersion, loader) =>
-      ipcRenderer.invoke(IpcChannel.DownloadMod, mod, gameVersion, loader),
   },
   profile: {
     create: (profile) => ipcRenderer.invoke(IpcChannel.CreateProfile, profile),
