@@ -3,7 +3,6 @@ import { NAMED_CONSTANTS, TYPES } from '../../types';
 import type { IModProvider } from '../interface';
 import type { IModService } from '../../mod/service';
 import type { IProviderAPI } from '../api/interface';
-import type { GameVersion, Loader } from '../../game/schema';
 import type { FilledMod } from '../../mod/schema';
 import type { IGameService } from '../../game/service';
 import type { ISystemService } from '../../system/service';
@@ -37,15 +36,13 @@ export class ModrinthProvider implements IModProvider {
     this.systemSerivce = systemSerivce;
   }
 
-  async downloadMod(mod: FilledMod, gameVersion: GameVersion, loader: Loader): Promise<void> {
+  async downloadMod(mod: FilledMod, modVersionId: string): Promise<void> {
     const settings = await this.gameSerivce.getSettings();
 
     if (!settings) throw new Error('Game settings not found');
 
-    const version = mod.versions.find(
-      (v) => v.gameVersion === gameVersion.version && v.loader === loader.name,
-    );
-    if (!version) throw new Error('Version for gameVersion and loader not found');
+    const version = mod.versions.find((v) => v.id === modVersionId);
+    if (!version) throw new Error('Version with that id not found');
 
     await this.systemSerivce.downloadMod(
       version.downloadUrl,
