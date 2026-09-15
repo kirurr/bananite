@@ -12,8 +12,10 @@ export function registerProfileIpcHandlers(): void {
   ipcMain.handle(channel.CreateProfile, (_, profile: NewProfile) => service.create(profile));
   ipcMain.handle(channel.GetProfile, (_, id: number) => service.get(id));
   ipcMain.handle(channel.ListProfiles, () => service.list());
-  ipcMain.handle(channel.AddModToProfile, (_, profileId: number, modId: string) =>
-    service.addMod(profileId, modId),
+  ipcMain.handle(
+    channel.AddModToProfile,
+    (_, profileId: number, modId: string, modVersionId: string) =>
+      service.addMod(profileId, modId, modVersionId),
   );
   ipcMain.handle(channel.RemoveModFromProfile, (_, profileId: number, modId: string) =>
     service.removeMod(profileId, modId),
