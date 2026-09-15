@@ -62,8 +62,8 @@ function handleSubmit() {
       show-clear
     />
     <Select
-      :disabled="!modId"
       v-model="modVersionId"
+      :disabled="!modId"
       :options="filteredModVersions"
       option-label="name"
       option-value="id"
