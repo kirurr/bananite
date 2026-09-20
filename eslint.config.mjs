@@ -105,6 +105,29 @@ export default tseslint.config(
     },
   },
 
+  // Preload исполняется в sandbox: require() там умеет только electron.
+  // Любой другой импорт затягивает в бандл main-процесс (node:path, drizzle,
+  // better-sqlite3) и роняет preload целиком вместе с window.api.
+  {
+    files: ['src/preload.ts'],
+    rules: {
+      'import/no-restricted-paths': [
+        'error',
+        {
+          zones: [
+            {
+              target: './src/preload.ts',
+              from: './src',
+              except: ['./ipc/contract.ts'],
+              message:
+                'preload может импортировать только electron и ./ipc/contract (файл без зависимостей).',
+            },
+          ],
+        },
+      ],
+    },
+  },
+
   // Конфиги на плейн-JS вне tsconfig: type-aware правила к ним неприменимы.
   {
     files: ['**/*.{js,mjs,cjs}'],
