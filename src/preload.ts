@@ -1,34 +1,18 @@
 import { contextBridge, ipcRenderer } from 'electron';
-import { IpcChannel, type Api } from './shared/ipc';
-import { systemHandler } from './shared/handler';
+import { contract } from './ipc/contract';
 
-const api: Api = {
-  game: {
-    listVersions: () => ipcRenderer.invoke(IpcChannel.VersionList),
-    listLoaders: () => ipcRenderer.invoke(IpcChannel.LoaderList),
-    syncData: () => ipcRenderer.invoke(IpcChannel.SyncData),
-    getSettings: () => ipcRenderer.invoke(IpcChannel.GameSettings),
-    setSettings: (data) => ipcRenderer.invoke(IpcChannel.SetGameSettings, data),
-  },
-  mods: {
-    addByLink: (link) => ipcRenderer.invoke(IpcChannel.ModsAddByLink, link),
-    list: () => ipcRenderer.invoke(IpcChannel.ModsList),
-  },
-  profile: {
-    create: (profile) => ipcRenderer.invoke(IpcChannel.CreateProfile, profile),
-    get: (id) => ipcRenderer.invoke(IpcChannel.GetProfile, id),
-    list: () => ipcRenderer.invoke(IpcChannel.ListProfiles),
-    addMod: (profileId, modId, modVersionId) =>
-      ipcRenderer.invoke(IpcChannel.AddModToProfile, profileId, modId, modVersionId),
-    removeMod: (profileId, modId) =>
-      ipcRenderer.invoke(IpcChannel.RemoveModFromProfile, profileId, modId),
-    update: (profileId, data) => ipcRenderer.invoke(IpcChannel.UpdateProfile, profileId, data),
-    exportProfile: (profileId) => ipcRenderer.invoke(IpcChannel.ExportProfile, profileId),
-    importProfile: () => ipcRenderer.invoke(IpcChannel.ImportProfile),
-  },
-  system: {
-    ...systemHandler,
-  },
-};
+// { game: ['listVersions'] } -> { game: { listVersions: (...args) => invoke('game:listVersions', ...args) } }
+// Plain objects only: contextBridge copies own properties, a Proxy arrives empty.
+const api = Object.fromEntries(
+  Object.entries(contract).map(([namespace, methods]) => [
+    namespace,
+    Object.fromEntries(
+      methods.map((method) => [
+        method,
+        (...args: unknown[]) => ipcRenderer.invoke(`${namespace}:${method}`, ...args),
+      ]),
+    ),
+  ]),
+);
 
 contextBridge.exposeInMainWorld('api', api);

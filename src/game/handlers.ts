@@ -1,16 +1,16 @@
-import { ipcMain } from 'electron';
 import { container } from '../container';
 import { TYPES } from '../types';
 import type { IGameService } from './service';
-import { channel } from './ipc';
 import type { NewGameSettings } from './schema';
 
-export function registerGameIpcHandlers(): void {
+export function gameHandlers() {
   const service = container.get<IGameService>(TYPES.GameService);
 
-  ipcMain.handle(channel.VersionList, () => service.getVersions());
-  ipcMain.handle(channel.LoaderList, () => service.getLoaders());
-  ipcMain.handle(channel.SyncData, () => service.syncData());
-  ipcMain.handle(channel.GameSettings, () => service.getSettings());
-  ipcMain.handle(channel.SetGameSettings, (_, data: NewGameSettings) => service.setSettings(data));
+  return {
+    listVersions: () => service.getVersions(),
+    listLoaders: () => service.getLoaders(),
+    syncData: () => service.syncData(),
+    getSettings: () => service.getSettings(),
+    setSettings: (data: NewGameSettings) => service.setSettings(data),
+  };
 }
