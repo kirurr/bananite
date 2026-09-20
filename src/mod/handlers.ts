@@ -1,11 +1,8 @@
-import { ipcMain } from 'electron';
 import { container, getModProvider } from '../container';
 import { TYPES } from '../types';
 import type { ProviderTypes } from '../providers/providers';
 import type { IModRepository } from './repository/interface';
-import { channel } from './ipc';
 
-/** Pick the provider (the @named binding) from a mod URL. */
 function providerFromLink(link: string): ProviderTypes {
   const host = new URL(link).hostname;
   if (host.includes('modrinth.com')) return 'modrinth';
@@ -13,13 +10,11 @@ function providerFromLink(link: string): ProviderTypes {
   throw new Error(`Unsupported provider for link: ${link}`);
 }
 
-export function registerModsIpcHandlers(): void {
+export function modsHandlers() {
   const modRepo = container.get<IModRepository>(TYPES.ModRepository);
 
-  ipcMain.handle(channel.ModsAddByLink, (_event, link: string) => {
-    const provider = getModProvider(providerFromLink(link));
-    return provider.addModByLink(link);
-  });
-
-  ipcMain.handle(channel.ModsList, () => modRepo.list());
+  return {
+    addByLink: (link: string) => getModProvider(providerFromLink(link)).addModByLink(link),
+    list: () => modRepo.list(),
+  };
 }
