@@ -11,6 +11,7 @@
     "package": "electron-forge package",
     "make": "electron-forge make",
     "publish": "electron-forge publish",
+		"test": "vitest",
     "lint": "eslint . --cache --cache-strategy content --cache-location node_modules/.cache/eslint",
     "lint:fix": "eslint . --fix",
     "typecheck": "vue-tsc --noEmit --incremental --tsBuildInfoFile node_modules/.cache/vue-tsc.tsbuildinfo",
@@ -62,6 +63,7 @@
     "typescript": "^6.0.3",
     "typescript-eslint": "^8.61.1",
     "vite": "^8.0.16",
+    "vitest": "^5.0.1",
     "vue-eslint-parser": "^10.4.1",
     "vue-tsc": "^3.3.11"
   },
